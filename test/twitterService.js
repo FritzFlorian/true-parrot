@@ -1,16 +1,14 @@
 'use strict';
 
 const User = require('../app/models/user');
+const RequestService = require('./requestService');
 
 class TwitterService {
   // House Keeping of our connection/server
-  constructor() {
-    this.server = undefined;
-  }
-
   start(done) {
     require('../server').then((server) => {
       this.server = server;
+      this.requestService = new RequestService(server.hapiServer);
       done();
     }).catch(done);
   }
@@ -25,7 +23,7 @@ class TwitterService {
 
   // Sample API
   getAPISample() {
-    return this.server.hapiServer.inject('/api/sample');
+    return this.requestService.get('/api/sample');
   }
 
   // Sample Static page
@@ -35,23 +33,23 @@ class TwitterService {
 
   // User API
   getAPIUsers() {
-    return this.server.hapiServer.inject('/api/users');
+    return this.requestService.get('/api/users');
   }
 
   getAPIUser(id) {
-    return this.server.hapiServer.inject(`/api/users/${id}`);
+    return this.requestService.get(`/api/users/${id}`);
   }
 
   createAPIUser(params) {
-    return this.server.hapiServer.inject({ url: '/api/users', method: 'POST', payload: params });
+    return this.requestService.post('/api/users', params);
   }
 
   deleteAPIUser(id) {
-    return this.server.hapiServer.inject({ url: `/api/users/${id}`, method: 'DELETE' });
+    return this.requestService.delete(`/api/users/${id}`);
   }
 
   updateAPIUser(id, params) {
-    return this.server.hapiServer.inject({ url: `/api/users/${id}`, method: 'PATCH', payload: params });
+    return this.requestService.patch(`/api/users/${id}`, params);
   }
 
   // User DB

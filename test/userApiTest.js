@@ -28,9 +28,11 @@ suite('User API tests', function () {
   test('get users returns database users', () =>
     service.getAPIUsers().then((res) => {
       assert.equal(res.statusCode, 200);
-      assert.equal(res.result.length, users.length);
+      assert.equal(res.json.length, users.length);
+
       for (let i = 0; i < users.length; i++) {
-        assert.deepEqual(res.result[i], users[i]);
+        assert(_.some([res.json[i]], fixtures.users[i]));
+        assert.equal(res.json[i]._id, users[i]._id);
       }
     })
   );
@@ -38,7 +40,7 @@ suite('User API tests', function () {
   test('get user by id returns correct user details', () =>
     service.getAPIUser(users[0]._id).then((res) => {
       assert.equal(res.statusCode, 200);
-      assert.deepEqual(res.result, users[0]);
+      assert.deepEqual(res.json, users[0]);
     })
   );
 
@@ -54,9 +56,9 @@ suite('User API tests', function () {
   test('delete existing user by id', () =>
     service.deleteAPIUser(users[0]).then((res) => {
       assert.equal(res.statusCode, 200);
-      assert.deepEqual(res.result, users[0]);
+      assert.deepEqual(res.json, users[0]);
 
-      return service.getDBUser(res.result._id);
+      return service.getDBUser(res.json._id);
     }).then((user) => {
       assert.isNull(user);
     })
@@ -78,7 +80,7 @@ suite('User API tests', function () {
 
     return service.createAPIUser(fixtures.new_user).then((res) => {
       assert.equal(res.statusCode, 201);
-      createdUser = res.result;
+      createdUser = res.json;
       assert(_some(createdUser, fixtures.new_user));
 
       return service.getDBUser(createdUser._id);
@@ -105,10 +107,10 @@ suite('User API tests', function () {
 
     return service.updateAPIUser(users[0]._id, updates).then((res) => {
       assert.equal(res.satusCode, 200);
-      user = res.result;
+      user = res.json;
       assert(_some(user, updatedUser));
 
-      return service.getDBUser(res.result._id);
+      return service.getDBUser(res.json._id);
     }).then((dbUser) => {
       assert.deepEqual(user, dbUser);
     });

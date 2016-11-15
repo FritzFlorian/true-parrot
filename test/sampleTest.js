@@ -23,7 +23,7 @@ suite('Sample tests', function () {
 
     return service.getAPISample().then((res) => {
       assert.equal(res.statusCode, 200);
-      assert.deepEqual(res.result, expectedResult);
+      assert.deepEqual(res.json, expectedResult);
     });
   });
 
