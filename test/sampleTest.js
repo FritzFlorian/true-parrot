@@ -4,7 +4,7 @@ const TwitterService = require('./twitterService');
 const assert = require('chai').assert;
 const _ = require('lodash');
 
-suite('Candidate API tests', function () {
+suite('Sample tests', function () {
   let service;
 
   before((done) => {
