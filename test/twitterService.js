@@ -25,12 +25,12 @@ class TwitterService {
 
   // Sample API
   getAPISample() {
-    return this.server.hapiSever.inject('/api/sample');
+    return this.server.hapiServer.inject('/api/sample');
   }
 
   // Sample Static page
   getStaticSample() {
-    return this.server.hapiSever.inject('/');
+    return this.server.hapiServer.inject('/');
   }
 
   // User API
@@ -39,15 +39,19 @@ class TwitterService {
   }
 
   getAPIUser(id) {
-    return this.server.hapiSever.inject(`/api/users/${id}`);
+    return this.server.hapiServer.inject(`/api/users/${id}`);
   }
 
-  createAPIUser(user) {
-    return this.server.hapiSever.inject({ url: '/api/users', method: 'POST', payload: user });
+  createAPIUser(params) {
+    return this.server.hapiServer.inject({ url: '/api/users', method: 'POST', payload: params });
   }
 
   deleteAPIUser(id) {
-    return this.server.hapiSever.inject({ url: '/api/users/${id}', method: 'DELETE' });
+    return this.server.hapiServer.inject({ url: `/api/users/${id}`, method: 'DELETE' });
+  }
+
+  updateAPIUser(id, params) {
+    return this.server.hapiServer.inject({ url: `/api/users/${id}`, method: 'PATCH', payload: params });
   }
 
   // User DB

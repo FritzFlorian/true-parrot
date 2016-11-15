@@ -5,7 +5,7 @@ const db = require('./app/models/db');
 
 class Server {
   constructor(hapiServer, db) {
-    this.hapiSever = hapiServer;
+    this.hapiServer = hapiServer;
     this.db = db;
   }
 };
