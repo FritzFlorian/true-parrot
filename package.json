@@ -1,7 +1,11 @@
 {
-  "name": "donation-web",
+  "name": "true-parrot",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/FritzFlorian/true-parrot.git"
+  },
   "version": "1.0.0",
-  "description": "an application to host donations for candidates",
+  "description": "a twitter clone to try node.js",
   "main": "index.js",
   "scripts": {
     "start": "node index",
