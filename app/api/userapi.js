@@ -19,7 +19,15 @@ exports.findOne = {
   auth: false,
 
   handler: function (request, reply) {
-
+    User.findOne({ _id: request.params.id }).then((user) => {
+      if (user == null) {
+        reply(Boom.notFound('id not found'));
+      } else {
+        reply(user);
+      }
+    }).catch((error) => {
+      reply(Boom.notFound('id not found'));
+    });
   },
 };
 

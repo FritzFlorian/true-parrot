@@ -13,8 +13,29 @@ class TwitterService {
     }).catch(done);
   }
 
-  clearDB() {
-    this.server.db.dropDatabase();
+  /**
+   * Resets the database by deleting all data and inserting the `test/seed.json`
+   * into the database.
+   *
+   * @returns {Promise} Returns the inserted database information when successful.
+   */
+  resetDB() {
+    return new Promise((result, reject) => {
+      this.server.db.dropDatabase((error, res) => {
+        if (error) {
+          reject(error);
+        } else {
+          const seeder = require('mongoose-seeder');
+          const seedData = require('./seed.json');
+
+          // Require all models to insert consistent db contents for tests
+          require('../app/models/user');
+          seeder.seed(seedData, { dropDatabase: false, dropCollections: true }).then(dbData => {
+            result(dbData);
+          }).catch(reject);
+        }
+      });
+    });
   }
 
   stop() {

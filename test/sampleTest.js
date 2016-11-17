@@ -11,9 +11,7 @@ suite('Sample tests', function () {
     service = new TwitterService();
     service.start(done);
   });
-  beforeEach(() => {
-    service.clearDB();
-  });
+  beforeEach(() => service.resetDB());
   after(() => {
     service.stop();
   });
@@ -27,10 +25,10 @@ suite('Sample tests', function () {
     });
   });
 
-  test('sample static endpoint responds with 200 and template', () => {
-    return service.getStaticSample().then((res) => {
+  test('sample static endpoint responds with 200 and template', () =>
+    service.getStaticSample().then((res) => {
       assert.equal(res.statusCode, 200);
       assert.include(res.payload, 'hare your thoughts with this innovative twitter clone!');
-    });
-  });
+    })
+  );
 });

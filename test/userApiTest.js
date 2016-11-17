@@ -4,23 +4,23 @@ const TwitterService = require('./twitterService');
 const assert = require('chai').assert;
 const _ = require('lodash');
 const fixtures = require('./fixtures.json');
+const User = require('../app/models/user');
 
 suite('User API tests', function () {
   let service;
   let users;
 
+  // Setup consistent data for each test run
   before((done) => {
     service = new TwitterService();
     service.start(done);
   });
-  beforeEach(() => {
-    service.clearDB();
-
-    const promises = fixtures.users.map(service.createDBUser);
-    return Promise.all(promises).then((newUsers) => {
-      users = newUsers;
-    });
-  });
+  beforeEach(() =>
+    service.resetDB().then(dbData => {
+      users = Object.keys(dbData.users).map(userKey => dbData.users[userKey]);
+      users = users.map(user => JSON.parse(JSON.stringify(user)));
+    })
+  );
   after(() => {
     service.stop();
   });
@@ -31,8 +31,7 @@ suite('User API tests', function () {
       assert.equal(res.json.length, users.length);
 
       for (let i = 0; i < users.length; i++) {
-        assert(_.some([res.json[i]], fixtures.users[i]));
-        assert.equal(res.json[i]._id, users[i]._id);
+        assert.deepEqual(res.json[i], users[i]);
       }
     })
   );
