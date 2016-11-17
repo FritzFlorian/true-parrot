@@ -30,7 +30,9 @@ class TwitterService {
 
           // Require all models to insert consistent db contents for tests
           require('../app/models/user');
-          seeder.seed(seedData, { dropDatabase: false, dropCollections: true }).then(dbData => {
+          seeder.seed(seedData, { dropDatabase: false, dropCollections: true })
+          .then((dbData) => this.seedResultToSimpleArrays(dbData))
+          .then(dbData => {
             result(dbData);
           }).catch(reject);
         }
@@ -75,11 +77,11 @@ class TwitterService {
 
   // User DB
   getDBUsers() {
-    return User.find({});
+    return User.find({}).then(users => JSON.parse(JSON.stringify(users)));
   }
 
   getDBUser(id) {
-    return User.findOne({ _id: id });
+    return User.findOne({ _id: id }).then(user => JSON.parse(JSON.stringify(user)));
   }
 
   createDBUser(user) {
@@ -89,6 +91,21 @@ class TwitterService {
 
   deleteDBUser(id) {
     return User.remove({ _id: id });
+  }
+
+  seedResultToSimpleArrays(dbData) {
+    const result = {};
+
+    Object.keys(dbData).forEach((collectionKey) => {
+      let collection = dbData[collectionKey];
+
+      const asArray = Object.keys(collection).map(key => collection[key]);
+      const simpleJson = asArray.map(element => JSON.parse(JSON.stringify(element)));
+
+      result[collectionKey] = simpleJson;
+    });
+
+    return result;
   }
 }
 

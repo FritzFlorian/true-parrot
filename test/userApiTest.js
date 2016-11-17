@@ -3,22 +3,22 @@
 const TwitterService = require('./twitterService');
 const assert = require('chai').assert;
 const _ = require('lodash');
-const fixtures = require('./fixtures.json');
 const User = require('../app/models/user');
 
 suite('User API tests', function () {
+  let fixtures;
   let service;
   let users;
 
-  // Setup consistent data for each test run
+  // Reset all data (and fixtures), so we can create each test fully isolated.
   before((done) => {
     service = new TwitterService();
     service.start(done);
   });
   beforeEach(() =>
     service.resetDB().then(dbData => {
-      users = Object.keys(dbData.users).map(userKey => dbData.users[userKey]);
-      users = users.map(user => JSON.parse(JSON.stringify(user)));
+      users = dbData.users;
+      fixtures = require('./fixtures.json');
     })
   );
   after(() => {
@@ -78,9 +78,11 @@ suite('User API tests', function () {
     let createdUser;
 
     return service.createAPIUser(fixtures.new_user).then((res) => {
-      assert.equal(res.statusCode, 201);
       createdUser = res.json;
-      assert(_some(createdUser, fixtures.new_user));
+
+      assert.equal(res.statusCode, 201);
+      assert(_.some([createdUser], fixtures.new_user),
+              'createdUser is a superset of the fixture user');
 
       return service.getDBUser(createdUser._id);
     }).then((dbUser) => {
@@ -90,7 +92,7 @@ suite('User API tests', function () {
 
   test('try to create user without parameters', () =>
     service.createAPIUser({}).then((res) => {
-      assert.equal(res.statusCode, 500);
+      assert.equal(res.statusCode, 400);
 
       return service.getDBUsers();
     }).then((dbUsers) => {

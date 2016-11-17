@@ -3,6 +3,6 @@
     "firstName": "Maggie",
     "lastName": "Simpson",
     "email": "maggie@simpson.com",
-    "password": ""
+    "password": "secret"
   }
 }
