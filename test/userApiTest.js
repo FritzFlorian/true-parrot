@@ -53,11 +53,11 @@ suite('User API tests', function () {
   );
 
   test('delete existing user by id', () =>
-    service.deleteAPIUser(users[0]).then((res) => {
-      assert.equal(res.statusCode, 200);
-      assert.deepEqual(res.json, users[0]);
+    service.deleteAPIUser(users[0]._id).then((res) => {
+      assert.equal(res.statusCode, 204);
+      assert.isNull(res.json);
 
-      return service.getDBUser(res.json._id);
+      return service.getDBUser(users[0]._id);
     }).then((user) => {
       assert.isNull(user);
     })

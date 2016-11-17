@@ -51,6 +51,10 @@ exports.deleteOne = {
   auth: false,
 
   handler: function (request, reply) {
-
+    User.remove({ _id: request.params.id }).then((user) => {
+      reply().code(204);
+    }).catch((error) => {
+      reply(Boom.notFound('id not found'));
+    });
   },
 };
