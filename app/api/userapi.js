@@ -62,8 +62,27 @@ exports.create = {
 exports.update = {
   auth: false,
 
-  handler: function (request, repyl) {
+  validate: {
+    payload: User.updateValidationSchema,
 
+    failAction: function (request, reply, source, error) {
+      const boomError = Boom.badRequest('Validation Failed.');
+      boomError.output.payload.validation_errors = error.data.details;
+      reply(boomError);
+    },
+
+    options: {
+      abortEarly: false,
+    },
+  },
+
+  handler: function (request, reply) {
+    User.findByIdAndUpdate({ _id: request.params.id },  { $set: request.payload }, { new: true })
+    .then((user) => {
+      reply(user).code(200);
+    }).catch((error) => {
+      reply(Boom.badImplementation('error updating user'));
+    });
   },
 };
 

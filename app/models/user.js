@@ -12,12 +12,17 @@ const userSchema = mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-const validationSchema = {
+User.validationSchema = {
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().required(),
 };
-User.validationSchema = validationSchema;
+User.updateValidationSchema = {
+  firstName: Joi.string(),
+  lastName: Joi.string(),
+  email: Joi.string().email(),
+  password: Joi.string(),
+};
 
 module.exports = User;

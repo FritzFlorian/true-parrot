@@ -103,13 +103,14 @@ suite('User API tests', function () {
 
   test('update user with valid parameters', () => {
     const updates = { firstName: 'New', lastName: 'Name' };
-    const updatedUser = _.merge({}, [users[0], updates]);
+    const updatedUser = _.merge(users[0], updates);
     let user;
 
     return service.updateAPIUser(users[0]._id, updates).then((res) => {
-      assert.equal(res.satusCode, 200);
       user = res.json;
-      assert(_some(user, updatedUser));
+
+      assert.equal(res.statusCode, 200);
+      assert(_.some([user], updatedUser));
 
       return service.getDBUser(res.json._id);
     }).then((dbUser) => {
