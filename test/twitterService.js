@@ -98,20 +98,20 @@ class TwitterService {
     return this.requestService.get('/api/tweets');
   }
 
-  getAPITweetsByUser() {
-    return this.requestService.get('/api/users/{id}/tweets');
+  getAPITweetsByUser(id) {
+    return this.requestService.get(`/api/users/${id}/tweets`);
   }
 
   getAPITweet(id) {
-    return this.requestService.get('/api/tweets/{id}');
+    return this.requestService.get(`/api/tweets/${id}`);
   }
 
   createAPITweet(userId, tweetParams) {
-    return this.requestService.post('/api/users/{id}/tweets', tweetParams);
+    return this.requestService.post(`/api/users/${userId}/tweets`, tweetParams);
   }
 
   deleteAPITweet(id) {
-    return this.requestService.delete('/api/tweets/{id}');
+    return this.requestService.delete(`/api/tweets/${id}`);
   }
 
   // Tweet DB

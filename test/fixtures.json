@@ -4,5 +4,8 @@
     "lastName": "Simpson",
     "email": "maggie@simpson.com",
     "password": "secret"
+  },
+  "new_tweet": {
+    "message": "Springfield rocks!"
   }
 }
