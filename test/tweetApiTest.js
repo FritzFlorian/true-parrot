@@ -8,6 +8,7 @@ suite('Tweet API tests', function () {
   let fixtures;
   let service;
   let users;
+  let tweets;
 
   // Reset all data (and fixtures), so we can create each test fully isolated.
   before((done) => {
@@ -17,6 +18,7 @@ suite('Tweet API tests', function () {
   beforeEach(() =>
     service.resetDB().then(dbData => {
       users = dbData.users;
+      tweets = dbData.tweets;
       fixtures = require('./fixtures.json');
     })
   );
