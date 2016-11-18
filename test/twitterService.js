@@ -1,6 +1,7 @@
 'use strict';
 
 const User = require('../app/models/user');
+const Tweet = require('../app/models/tweet');
 const RequestService = require('./requestService');
 
 class TwitterService {
@@ -28,8 +29,7 @@ class TwitterService {
           const seeder = require('mongoose-seeder');
           const seedData = require('./seed.json');
 
-          // Require all models to insert consistent db contents for tests
-          require('../app/models/user');
+          // Insert consistent db contents for tests
           seeder.seed(seedData, { dropDatabase: false, dropCollections: true })
           .then((dbData) => this.seedResultToSimpleArrays(dbData))
           .then(dbData => {
@@ -93,6 +93,46 @@ class TwitterService {
     return User.remove({ _id: id });
   }
 
+  // Tweet Api
+  getAPITweets() {
+    return this.requestService.get('/api/tweets');
+  }
+
+  getAPITweetsByUser() {
+    return this.requestService.get('/api/users/{id}/tweets');
+  }
+
+  getAPITweet(id) {
+    return this.requestService.get('/api/tweets/{id}');
+  }
+
+  createAPITweet(userId, tweetParams) {
+    return this.requestService.post('/api/users/{id}/tweets', tweetParams);
+  }
+
+  deleteAPITweet(id) {
+    return this.requestService.delete('/api/tweets/{id}');
+  }
+
+  // Tweet DB
+  getDBTweets() {
+    return Tweet.find({}).then(tweets => JSON.parse(JSON.stringify(tweets)));
+  }
+
+  getDBTweet(id) {
+    return Tweet.findOne({ _id: id }).then(tweet => JSON.parse(JSON.stringify(tweet)));
+  }
+
+  createDBTweet(tweet) {
+    const newTweet = new Tweet(tweet);
+    return newTweet.save();
+  }
+
+  deleteDBTweet(id) {
+    return Tweet.remove({ _id: id });
+  }
+
+  // Helpers
   seedResultToSimpleArrays(dbData) {
     const result = {};
 
