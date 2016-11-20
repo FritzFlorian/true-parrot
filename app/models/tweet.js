@@ -16,7 +16,6 @@ const Tweet = mongoose.model('Tweet', tweetSchema);
 
 Tweet.validationSchema = {
   message: Joi.string().min(1).max(140).required(),
-  creator: Joi.objectId().required(),
 };
 
 module.exports = Tweet;

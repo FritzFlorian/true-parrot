@@ -55,8 +55,39 @@ exports.findOne = {
 exports.create = {
   auth: false,
 
-  handler: function (request, reply) {
+  validate: {
+    payload: Tweet.validationSchema,
 
+    failAction: function (request, reply, source, error) {
+      const boomError = Boom.badRequest('Validation Failed.');
+      boomError.output.payload.validation_errors = error.data.details;
+      reply(boomError);
+    },
+
+    options: {
+      abortEarly: false,
+    },
+  },
+
+  handler: function (request, reply) {
+    let user;
+
+    User.findOne({ _id: request.params.id }).then((dbUser) => {
+      user = dbUser;
+
+      if (user) {
+        const tweet = Tweet(request.payload);
+        tweet.creator = user._id;
+
+        return new tweet.save().then((tweet) => {
+          reply(tweet).code(201);
+        });
+      } else {
+        reply(Boom.badRequest('error creating tweet'));
+      }
+    }).catch((error) => {
+      reply(Boom.badImplementation('error creating tweet'));
+    });
   },
 };
 
