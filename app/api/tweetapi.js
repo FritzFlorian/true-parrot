@@ -24,7 +24,15 @@ exports.findAllByUser = {
   auth: false,
 
   handler: function (request, reply) {
-
+    Tweet.find({ creator: request.params.id })
+    .sort({ createdAt: 'desc' })
+    .limit(50)
+    .populate('creator')
+    .exec().then((tweets) => {
+      reply(tweets);
+    }).catch((error) => {
+      reply(Boom.badImplementation('error accessing db'));
+    });
   },
 };
 

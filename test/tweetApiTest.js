@@ -49,8 +49,8 @@ suite('Tweet API tests', function () {
   );
 
   test('get tweets by user returns users timeline of tweets', () =>
-    service.getAPITweetsByUser(users[0]).then((res) => {
-      const tweetsByUser = tweets.filter(tweet => tweet.user === users[0]._id);
+    service.getAPITweetsByUser(users[0]._id).then((res) => {
+      const tweetsByUser = tweets.filter(tweet => tweet.creator._id === users[0]._id);
 
       assert.equal(res.statusCode, 200);
       assert.equal(res.json.length, tweetsByUser.length);
