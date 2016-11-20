@@ -11,19 +11,17 @@ suite('User API tests', function () {
   let users;
 
   // Reset all data (and fixtures), so we can create each test fully isolated.
-  before((done) => {
+  suiteSetup(() => {
     service = new TwitterService();
-    service.start(done);
+    return service.start();
   });
-  beforeEach(() =>
+  setup(() =>
     service.resetDB().then(dbData => {
       users = dbData.users;
       fixtures = require('./fixtures.json');
     })
   );
-  after(() => {
-    service.stop();
-  });
+  suiteTeardown(() => service.stop());
 
   test('get users returns database users', () =>
     service.getAPIUsers().then((res) => {

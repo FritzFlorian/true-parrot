@@ -7,14 +7,12 @@ const _ = require('lodash');
 suite('Sample tests', function () {
   let service;
 
-  before((done) => {
+  suiteSetup(() => {
     service = new TwitterService();
-    service.start(done);
+    return service.start();
   });
-  beforeEach(() => service.resetDB());
-  after(() => {
-    service.stop();
-  });
+  setup(() => service.resetDB());
+  suiteTeardown(() => service.stop());
 
   test('sample api endpoint responds with 200 and data', () => {
     const expectedResult = { key: 'value' };

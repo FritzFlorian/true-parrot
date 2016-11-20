@@ -1,12 +1,25 @@
 'use strict';
 
 const Hapi = require('hapi');
-const db = require('./app/models/db');
+const DB = require('./app/models/db');
 
 class Server {
   constructor(hapiServer, db) {
     this.hapiServer = hapiServer;
     this.db = db;
+  }
+
+  stop() {
+    return this.db.stop();
+  }
+
+  static start() {
+    return new Promise(function (resolve, reject) {
+      const db = DB.start();
+      db.connection.once('open', () => {
+        startHapiServer(db, resolve, reject);
+      });
+    });
   }
 };
 
@@ -70,8 +83,4 @@ function startHapiServer(db, resolve, reject) {
  * Server Start Promise is returned.
  * Will resolve to the started server or reject with an error.
  */
-module.exports = new Promise(function (resolve, reject) {
-  db.once('open', () => {
-    startHapiServer(db, resolve, reject);
-  });
-});
+module.exports = Server;

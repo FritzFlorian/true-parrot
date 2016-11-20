@@ -11,20 +11,18 @@ suite('Tweet API tests', function () {
   let tweets;
 
   // Reset all data (and fixtures), so we can create each test fully isolated.
-  before((done) => {
+  suiteSetup(() => {
     service = new TwitterService();
-    service.start(done);
+    return service.start();
   });
-  beforeEach(() =>
+  setup(() =>
     service.resetDB().then(dbData => {
       users = dbData.users;
       tweets = dbData.tweets;
       fixtures = require('./fixtures.json');
     })
   );
-  after(() => {
-    service.stop();
-  });
+  suiteTeardown(() => service.stop());
 
   test('get tweets returns global timeline of tweets', () =>
     service.getAPITweets().then((res) => {

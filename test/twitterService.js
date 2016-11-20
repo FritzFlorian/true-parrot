@@ -3,15 +3,15 @@
 const User = require('../app/models/user');
 const Tweet = require('../app/models/tweet');
 const RequestService = require('./requestService');
+const Server = require('../server');
 
 class TwitterService {
   // House Keeping of our connection/server
-  start(done) {
-    require('../server').then((server) => {
+  start() {
+    return Server.start().then((server) => {
       this.server = server;
       this.requestService = new RequestService(server.hapiServer);
-      done();
-    }).catch(done);
+    });
   }
 
   /**
@@ -21,27 +21,16 @@ class TwitterService {
    * @returns {Promise} Returns the inserted database information when successful.
    */
   resetDB() {
-    return new Promise((result, reject) => {
-      this.server.db.dropDatabase((error, res) => {
-        if (error) {
-          reject(error);
-        } else {
-          const seeder = require('mongoose-seeder');
-          const seedData = require('./seed.json');
+    const seeder = require('mongoose-seeder');
+    const seedData = require('./seed.json');
 
-          // Insert consistent db contents for tests
-          seeder.seed(seedData, { dropDatabase: false, dropCollections: true })
-          .then((dbData) => this.seedResultToSimpleArrays(dbData))
-          .then(dbData => {
-            result(dbData);
-          }).catch(reject);
-        }
-      });
-    });
+    // Insert consistent db contents for tests
+    return seeder.seed(seedData, { dropDatabase: false, dropCollections: true })
+                  .then((dbData) => this.seedResultToSimpleArrays(dbData));
   }
 
   stop() {
-    this.server.db.close();
+    return this.server.stop();
   }
 
   // Sample API
