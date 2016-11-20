@@ -32,7 +32,15 @@ exports.findOne = {
   auth: false,
 
   handler: function (request, reply) {
-
+    Tweet.findOne({ _id: request.params.id }).populate('creator').exec().then((tweet) => {
+      if (tweet) {
+        reply(tweet);
+      } else {
+        reply(Boom.notFound('id not found'));
+      }
+    }).catch((error) => {
+      reply(Boom.notFound('id not found'));
+    });
   },
 };
 
