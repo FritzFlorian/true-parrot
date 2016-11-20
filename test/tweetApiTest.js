@@ -3,6 +3,7 @@
 const TwitterService = require('./twitterService');
 const assert = require('chai').assert;
 const _ = require('lodash');
+const Tweet = require('../app/models/tweet');
 
 suite('Tweet API tests', function () {
   let fixtures;
@@ -18,8 +19,12 @@ suite('Tweet API tests', function () {
   setup(() =>
     service.resetDB().then(dbData => {
       users = dbData.users;
-      tweets = dbData.tweets;
+
       fixtures = require('./fixtures.json');
+
+      return Tweet.find({}).sort({ createdAt: 'desc' }).limit(50).populate('creator').exec();
+    }).then((populatedTweets) => {
+      tweets = JSON.parse(JSON.stringify(populatedTweets));
     })
   );
   suiteTeardown(() => service.stop());

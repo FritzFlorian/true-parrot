@@ -11,6 +11,7 @@ exports.findAll = {
     Tweet.find({})
     .sort({ createdAt: 'desc' })
     .limit(50)
+    .populate('creator')
     .exec().then((tweets) => {
       reply(tweets);
     }).catch((error) => {
