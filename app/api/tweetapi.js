@@ -64,6 +64,10 @@ exports.deleteOne = {
   auth: false,
 
   handler: function (request, reply) {
-
+    Tweet.remove({ _id: request.params.id }).then((tweet) => {
+      reply().code(204);
+    }).catch((error) => {
+      reply(Boom.notFound('id not found'));
+    });
   },
 };
