@@ -93,10 +93,27 @@ suite('Tweet API tests', function () {
     })
   );
 
-  test('create tweet with valid parameters', () => {
+  test('create tweet with valid parameters (no image)', () => {
     let createdTweet;
 
     return service.createAPITweet(users[0]._id, fixtures.new_tweet).then((res) => {
+      createdTweet = res.json;
+
+      assert.equal(res.statusCode, 201);
+      assert(_.some([createdTweet], fixtures.new_tweet),
+          'createdTweet is a superset of the fixture tweet');
+
+      return service.getDBTweet(createdTweet._id);
+    }).then((dbTweet) => {
+      assert.deepEqual(createdTweet, dbTweet);
+    });
+  });
+
+  test('create tweet with valid parameters (with image)', () => {
+    let createdTweet;
+    const imagePath =  `${__dirname}/homer.png`;
+
+    return service.createAPITweet(users[0]._id, fixtures.new_tweet, imagePath).then((res) => {
       createdTweet = res.json;
 
       assert.equal(res.statusCode, 201);

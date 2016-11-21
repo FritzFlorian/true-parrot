@@ -4,6 +4,9 @@ const User = require('../app/models/user');
 const Tweet = require('../app/models/tweet');
 const RequestService = require('./requestService');
 const Server = require('../server');
+const FormData = require('form-data');
+const streamToPromise = require('stream-to-promise');
+const fs = require('fs');
 
 class TwitterService {
   // House Keeping of our connection/server
@@ -95,8 +98,16 @@ class TwitterService {
     return this.requestService.get(`/api/tweets/${id}`);
   }
 
-  createAPITweet(userId, tweetParams) {
-    return this.requestService.post(`/api/users/${userId}/tweets`, tweetParams);
+  createAPITweet(userId, tweetParams, tweetImagePath) {
+    const form = new FormData();
+    form.append('json', JSON.stringify(tweetParams));
+    if (tweetImagePath) {
+      form.append('image', fs.createReadStream(tweetImagePath));
+    }
+
+    return streamToPromise(form).then(payload =>
+             this.requestService.post(`/api/users/${userId}/tweets`, payload)
+           );
   }
 
   deleteAPITweet(id) {
