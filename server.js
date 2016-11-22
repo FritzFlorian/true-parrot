@@ -82,7 +82,7 @@ function startHapiServer(db, resolve, reject) {
 
 function createDefaultContext(request) {
   let loggedIn = false;
-  if (request.auth.credentials) {
+  if (request.auth.credentials && request.auth.credentials.loggedIn) {
     loggedIn = true;
   }
 

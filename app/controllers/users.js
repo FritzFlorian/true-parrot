@@ -2,6 +2,8 @@
 
 const User = require('../models/user');
 
+const Joi = require('joi');
+
 exports.signup = {
   auth: false,
   handler: function (request, reply) {
@@ -45,4 +47,64 @@ exports.login = {
     reply.view('login', { title: 'Login' });
   },
 
+};
+
+exports.authenticate = {
+  auth: false,
+  validate: {
+
+    payload: {
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    },
+
+    failAction: function (request, reply, source, error) {
+      reply.view('login', {
+        title: 'Login error',
+        errors: error.data.details,
+      }).code(400);
+    },
+
+    options: {
+      abortEarly: false,
+    },
+  },
+
+  handler: function (request, reply) {
+    const alreadyLoggedIn = request.auth.credentials && request.auth.credentials.loggedIn;
+    if (alreadyLoggedIn) {
+      reply.redirectTo('/');
+      return;
+    }
+
+    const user = request.payload;
+    User.findOne({ email: user.email }).then(foundUser => {
+      if (foundUser && foundUser.password === user.password) {
+        setCurrentUser(request, foundUser);
+        reply.redirect('/');
+      } else {
+        reply.view('login', {
+          title: 'Login error',
+          errors: [
+            {
+              message: 'Invalid email/password combination. Please check your password.',
+              path: 'email',
+            },
+          ],
+        }).code(400);
+      }
+    }).catch(err => {
+      reply.redirect('/');
+    });
+  },
+};
+
+function setCurrentUser(request, user) {
+  request.cookieAuth.set({
+    loggedIn: true,
+    loggedInUserId: user._id,
+    loggedInUserEmail: user.email,
+    loggedInUserFirstName: user.firstName,
+    loggedInUserLastName: user.lastName,
+  });
 };
