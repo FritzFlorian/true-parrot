@@ -63,7 +63,7 @@ exports.update = {
   auth: false,
 
   validate: {
-    payload: User.updateValidationSchema,
+    payload: User.updateApiValidationSchema,
 
     failAction: function (request, reply, source, error) {
       const boomError = Boom.badRequest('Validation Failed.');

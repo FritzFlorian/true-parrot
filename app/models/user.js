@@ -18,7 +18,13 @@ User.validationSchema = {
   email: Joi.string().email().required(),
   password: Joi.string().required(),
 };
-User.updateValidationSchema = {
+User.updateApiValidationSchema = {
+  firstName: Joi.string(),
+  lastName: Joi.string(),
+  email: Joi.string().email(),
+  password: Joi.string(),
+};
+User.updateWebValidationSchema = {
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
   email: Joi.string().email().required(),

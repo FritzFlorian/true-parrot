@@ -102,6 +102,7 @@ suite('User API tests', function () {
   test('update user with valid parameters', () => {
     const updates = { firstName: 'New', lastName: 'Name' };
     const updatedUser = _.merge(users[0], updates);
+    delete updatedUser.updatedAt;
     let user;
 
     return service.updateAPIUser(users[0]._id, updates).then((res) => {

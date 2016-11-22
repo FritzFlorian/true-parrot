@@ -151,7 +151,7 @@ exports.viewSettings = {
 
 exports.updateSettings = {
   validate: {
-    payload: User.updateValidationSchema,
+    payload: User.updateWebValidationSchema,
 
     failAction: function (request, reply, source, error) {
       reply.view('settings', {
