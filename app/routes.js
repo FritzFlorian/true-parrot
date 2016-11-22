@@ -12,6 +12,8 @@ module.exports = [
   { method: 'GET', path: '/login', config: User.login },
   { method: 'POST', path: '/authenticate', config: User.authenticate },
   { method: 'GET', path: '/logout', config: User.logout },
+  { method: 'GET', path: '/settings', config: User.viewSettings },
+  { method: 'POST', path: '/settings', config: User.updateSettings },
 
   {
     method: 'GET',

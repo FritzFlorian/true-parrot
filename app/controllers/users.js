@@ -136,3 +136,46 @@ exports.logout = {
     reply.redirect('/');
   },
 };
+
+exports.viewSettings = {
+  handler: function (request, reply) {
+    const currentUserId = request.auth.credentials.loggedInUserId;
+    User.findOne({ _id: currentUserId }).then(user => {
+      reply.view('settings', { title: 'Account Settings', user: user });
+    }).catch(error => {
+      reply.redirect('/');
+    });
+  },
+};
+
+exports.updateSettings = {
+  validate: {
+    payload: User.updateValidationSchema,
+
+    failAction: function (request, reply, source, error) {
+      reply.view('settings', {
+        title: 'Settings error',
+        user: request.payload,
+        errors: error.data.details,
+      }).code(400);
+    },
+
+    options: {
+      abortEarly: false,
+    },
+  },
+  handler: function (request, reply) {
+    const currentUserId = request.auth.credentials.loggedInUserId;
+    const newUser = request.payload;
+    if (newUser.password.length == 0) {
+      delete newUser.password;
+    }
+
+    User.findByIdAndUpdate({ _id: currentUserId },  { $set: request.payload }, { new: true })
+        .then((user) => {
+          reply.view('settings', { title: 'Account Settings', user: user });
+        }).catch((error) => {
+          reply.redirect('/');
+        });
+  },
+};

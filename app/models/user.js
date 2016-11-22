@@ -19,10 +19,10 @@ User.validationSchema = {
   password: Joi.string().required(),
 };
 User.updateValidationSchema = {
-  firstName: Joi.string(),
-  lastName: Joi.string(),
-  email: Joi.string().email(),
-  password: Joi.string(),
+  firstName: Joi.string().required(),
+  lastName: Joi.string().required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().allow(''),
 };
 
 module.exports = User;
