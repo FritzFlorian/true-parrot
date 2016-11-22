@@ -2,7 +2,7 @@
 True Parrot is a small twitter like web app using node.js and hapi.
 The goal is to get an overview of building web apps using node.
 
-Try the app at heroku: <TODO: Publish to Heroku>
+Try the app on heroku: https://true-parrot.herokuapp.com/
 
 ## Run
 
