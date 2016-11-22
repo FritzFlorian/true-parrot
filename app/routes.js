@@ -8,6 +8,8 @@ module.exports = [
 
   { method: 'GET', path: '/', config: Main.main },
   { method: 'GET', path: '/signup', config: User.signup },
+  { method: 'POST', path: '/register', config: User.register },
+  { method: 'GET', path: '/login', config: User.login },
 
   {
     method: 'GET',

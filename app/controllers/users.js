@@ -5,7 +5,7 @@ const User = require('../models/user');
 exports.signup = {
   auth: false,
   handler: function (request, reply) {
-    reply.view('signup', { title: 'Sign up for Donations' });
+    reply.view('signup', { title: 'Sign Up' });
   },
 
 };
@@ -37,4 +37,12 @@ exports.register = {
       reply.redirect('/');
     });
   },
+};
+
+exports.login = {
+  auth: false,
+  handler: function (request, reply) {
+    reply.view('login', { title: 'Login' });
+  },
+
 };
