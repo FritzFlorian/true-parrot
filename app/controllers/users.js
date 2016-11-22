@@ -128,3 +128,11 @@ function setCurrentUser(request, user) {
     loggedInUserLastName: user.lastName,
   });
 };
+
+exports.logout = {
+  auth: false,
+  handler: function (request, reply) {
+    request.cookieAuth.clear();
+    reply.redirect('/');
+  },
+};
