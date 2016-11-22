@@ -59,6 +59,7 @@ function startHapiServer(db, resolve, reject) {
       partialsPath: './app/views/partials',
       layout: true,
       isCached: false,
+      context: createDefaultContext,
     });
 
     server.route(require('./app/routes'));
@@ -77,6 +78,12 @@ function startHapiServer(db, resolve, reject) {
       });
     }
   });
+}
+
+function createDefaultContext(request) {
+  const loggedIn = request.auth.credentials.loggedIn;
+
+  return { loggedIn: loggedIn };
 }
 
 /**
