@@ -3,6 +3,7 @@
 const User = require('../models/user');
 
 const Joi = require('joi');
+const gravatar = require('gravatar');
 
 exports.signup = {
   auth: {
@@ -177,5 +178,24 @@ exports.updateSettings = {
         }).catch((error) => {
           reply.redirect('/');
         });
+  },
+};
+
+exports.profile = {
+  auth: false,
+
+  handler: function (request, reply) {
+    User.findOne({ _id: request.params.id }).then((user) => {
+      if (user) {
+        delete user.password;
+        user.gravatar = gravatar.url(user.email,  { s: '400' });
+
+        reply.view('profile', { user: user });
+      } else {
+        reply.redirect('/');
+      }
+    }).catch((error) => {
+      reply.redirect('/');
+    });
   },
 };
