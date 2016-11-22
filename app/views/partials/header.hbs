@@ -7,8 +7,20 @@
 
     <div class="right menu">
       {{#if loggedIn}}
-        <img class="ui avatar image" src="{{gravatar}}">
-        <span>{{fullName}}</span>
+        <div class="ui dropdown item">
+          <a href="/users/{{userId}}">
+            <img class="ui avatar image" src="{{gravatar}}"/>
+            {{fullName}}
+          </a>
+          <i class="ui dropdown icon"></i>
+
+          <div class="menu">
+            <a class="item" href="/users/{{userId}}">Profile</a>
+            <a class="item" href="/settings">Settings</a>
+            <div class="divider"></div>
+            <a class="item" href="/logout">Logout</a>
+          </div>
+        </div>
       {{else}}
         <a class="item" href="/login">
           Log-in

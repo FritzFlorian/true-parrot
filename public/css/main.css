@@ -3,6 +3,10 @@ menu {
     padding: 0;
 }
 
+menu a {
+    color: black;
+}
+
 #main-content {
     min-height: 100vh;
     padding-top: 64px;

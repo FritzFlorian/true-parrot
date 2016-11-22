@@ -16,7 +16,7 @@ exports.signup = {
   },
   handler: function (request, reply) {
     if (request.auth.isAuthenticated) {
-      reply.redirectTo('/');
+      reply.redirect('/');
       return;
     }
 
@@ -66,7 +66,7 @@ exports.login = {
   },
   handler: function (request, reply) {
     if (request.auth.isAuthenticated) {
-      reply.redirectTo('/');
+      reply.redirect('/');
       return;
     }
 

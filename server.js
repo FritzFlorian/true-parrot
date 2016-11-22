@@ -82,17 +82,20 @@ function createDefaultContext(request) {
   let loggedIn = false;
   let gravatarUrl = '';
   let fullName = '';
+  let userId = 0;
   if (request.auth.isAuthenticated) {
     loggedIn = true;
     gravatarUrl = gravatar.url(request.auth.credentials.loggedInUserEmail);
-    fullName = request.auth.credentials.loggedInUserFirstName +
+    fullName = request.auth.credentials.loggedInUserFirstName + ' ' +
                 request.auth.credentials.loggedInUserLastName;
+    userId = request.auth.credentials.loggedInUserId;
   }
 
   return {
     loggedIn: loggedIn,
     gravatar: gravatarUrl,
     fullName: fullName,
+    userId: userId,
     title: 'True Parrot',
   };
 }
