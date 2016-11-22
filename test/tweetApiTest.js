@@ -111,7 +111,7 @@ suite('Tweet API tests', function () {
 
   test('create tweet with valid parameters (with image)', () => {
     let createdTweet;
-    const imagePath =  `${__dirname}/homer.png`;
+    const imagePath =  `${__dirname}/sample.jpg`;
 
     return service.createAPITweet(users[0]._id, fixtures.new_tweet, imagePath).then((res) => {
       createdTweet = res.json;
@@ -119,6 +119,7 @@ suite('Tweet API tests', function () {
       assert.equal(res.statusCode, 201);
       assert(_.some([createdTweet], fixtures.new_tweet),
           'createdTweet is a superset of the fixture tweet');
+      assert.isNotNull(createdTweet.image);
 
       return service.getDBTweet(createdTweet._id);
     }).then((dbTweet) => {

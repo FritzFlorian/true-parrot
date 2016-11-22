@@ -3,6 +3,12 @@
 const Boom = require('boom');
 const User = require('../models/user');
 const Tweet = require('../models/tweet');
+const cloudinary = require('cloudinary');
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
+});
 
 exports.findAll = {
   auth: false,
@@ -55,6 +61,12 @@ exports.findOne = {
 exports.create = {
   auth: false,
 
+  payload: {
+    output: 'stream',
+    parse: true,
+    allow: 'multipart/form-data',
+  },
+
   validate: {
     payload: Tweet.validationSchema,
 
@@ -70,26 +82,47 @@ exports.create = {
   },
 
   handler: function (request, reply) {
-    let user;
+    const uploadOptions = {
+      photo: {
+          title: 'test',
+          photo: request.payload.image,
+        },
+    };
 
-    User.findOne({ _id: request.params.id }).then((dbUser) => {
-      user = dbUser;
+    const maxImageSize = 1000;
 
-      if (user) {
-        const tweet = Tweet(request.payload);
-        tweet.creator = user._id;
-
-        return new tweet.save().then((tweet) => {
-          reply(tweet).code(201);
-        });
-      } else {
-        reply(Boom.badRequest('error creating tweet'));
-      }
-    }).catch((error) => {
-      reply(Boom.badImplementation('error creating tweet'));
-    });
+    if (request.payload.image) {
+      const stream = cloudinary.uploader.upload_stream((result) => {
+        createTweet(request.payload.json, result.url, request.params.id, reply);
+      }, { width: maxImageSize, height: maxImageSize, crop: 'limit', format: 'jpg' });
+      request.payload.image.pipe(stream);
+    } else {
+      createTweet(request.payload.json, null, request.params.id, reply);
+    }
   },
 };
+
+function createTweet(tweetJson, tweetImage, userId, reply) {
+  let user;
+
+  User.findOne({ _id: userId }).then((dbUser) => {
+    user = dbUser;
+
+    if (user) {
+      const tweet = Tweet(tweetJson);
+      tweet.creator = user._id;
+      tweet.image = tweetImage;
+
+      return new tweet.save().then((tweet) => {
+        reply(tweet).code(201);
+      });
+    } else {
+      reply(Boom.badRequest('error creating tweet'));
+    }
+  }).catch((error) => {
+    reply(Boom.badImplementation('error creating tweet'));
+  });
+}
 
 exports.deleteOne = {
   auth: false,

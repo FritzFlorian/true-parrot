@@ -6,6 +6,7 @@ Joi.objectId = require('joi-objectid')(Joi);
 
 const tweetSchema = mongoose.Schema({
   message: String,
+  image: String,
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -15,7 +16,10 @@ const tweetSchema = mongoose.Schema({
 const Tweet = mongoose.model('Tweet', tweetSchema);
 
 Tweet.validationSchema = {
-  message: Joi.string().min(1).max(140).required(),
+  json: Joi.object({
+    message: Joi.string().min(1).max(140).required(),
+  }).required(),
+  image: Joi.any(),
 };
 
 module.exports = Tweet;
