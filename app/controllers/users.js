@@ -5,8 +5,21 @@ const User = require('../models/user');
 const Joi = require('joi');
 
 exports.signup = {
-  auth: false,
+  auth: {
+    mode: 'try',
+    strategy: 'session',
+  },
+  plugins: {
+    'hapi-auth-cookie': {
+      redirectTo: false,
+    },
+  },
   handler: function (request, reply) {
+    if (request.auth.isAuthenticated) {
+      reply.redirectTo('/');
+      return;
+    }
+
     reply.view('signup', { title: 'Sign Up' });
   },
 
@@ -42,8 +55,21 @@ exports.register = {
 };
 
 exports.login = {
-  auth: false,
+  auth: {
+    mode: 'try',
+    strategy: 'session',
+  },
+  plugins: {
+    'hapi-auth-cookie': {
+      redirectTo: false,
+    },
+  },
   handler: function (request, reply) {
+    if (request.auth.isAuthenticated) {
+      reply.redirectTo('/');
+      return;
+    }
+
     reply.view('login', { title: 'Login' });
   },
 
@@ -71,12 +97,6 @@ exports.authenticate = {
   },
 
   handler: function (request, reply) {
-    const alreadyLoggedIn = request.auth.credentials && request.auth.credentials.loggedIn;
-    if (alreadyLoggedIn) {
-      reply.redirectTo('/');
-      return;
-    }
-
     const user = request.payload;
     User.findOne({ email: user.email }).then(foundUser => {
       if (foundUser && foundUser.password === user.password) {

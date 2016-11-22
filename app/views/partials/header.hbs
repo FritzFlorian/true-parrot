@@ -6,12 +6,17 @@
     </a>
 
     <div class="right menu">
-      <a class="item">
-        Log-in
-      </a>
-      <a class="item" href="/signup">
-        Sign up
-      </a>
+      {{#if loggedIn}}
+        <img class="ui avatar image" src="{{gravatar}}">
+        <span>{{fullName}}</span>
+      {{else}}
+        <a class="item" href="/login">
+          Log-in
+        </a>
+        <a class="item" href="/signup">
+          Sign up
+        </a>
+      {{/if}}
     </div>
   </menu>
 </header>

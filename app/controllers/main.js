@@ -3,7 +3,15 @@
 const Joi = require('joi');
 
 exports.main = {
-  auth: false,
+  auth: {
+    mode: 'try',
+    strategy: 'session',
+  },
+  plugins: {
+    'hapi-auth-cookie': {
+      redirectTo: false,
+    },
+  },
   handler: function (request, reply) {
     reply.view('main', { title: 'Welcome to Twitter-Clone' });
   },

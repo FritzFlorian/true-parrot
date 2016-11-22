@@ -19,6 +19,7 @@
     "boom": "^4.2.0",
     "cloudinary": "^1.4.4",
     "flickrapi": "^0.6.0",
+    "gravatar": "^1.6.0",
     "handlebars": "^4.0.5",
     "hapi": "^15.2.0",
     "hapi-auth-cookie": "^6.1.1",

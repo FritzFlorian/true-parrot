@@ -2,6 +2,7 @@
 
 const Hapi = require('hapi');
 const DB = require('./app/models/db');
+const gravatar = require('gravatar');
 
 class Server {
   constructor(hapiServer, db) {
@@ -37,15 +38,12 @@ function startHapiServer(db, resolve, reject) {
     }
 
     // Add cookie based authentication
-    server.auth.strategy('standard', 'cookie', {
+    server.auth.strategy('session', 'cookie', true, {
       password: process.env.COOKIE_PASSWORD || 'oean531Oeuoeau}{oeuaoeu{}uoeauoeu',
-      cookie: 'donation-cookie',
+      cookie: 'twitter-cookie',
       isSecure: false,
       ttl: 24 * 60 * 60 * 1000,
       redirectTo: '/login',
-    });
-    server.auth.default({
-      strategy: 'standard',
     });
 
     // Add html rendering engine
@@ -82,12 +80,19 @@ function startHapiServer(db, resolve, reject) {
 
 function createDefaultContext(request) {
   let loggedIn = false;
-  if (request.auth.credentials && request.auth.credentials.loggedIn) {
+  let gravatarUrl = '';
+  let fullName = '';
+  if (request.auth.isAuthenticated) {
     loggedIn = true;
+    gravatarUrl = gravatar.url(request.auth.credentials.loggedInUserEmail);
+    fullName = request.auth.credentials.loggedInUserFirstName +
+                request.auth.credentials.loggedInUserLastName;
   }
 
   return {
     loggedIn: loggedIn,
+    gravatar: gravatarUrl,
+    fullName: fullName,
     title: 'True Parrot',
   };
 }
