@@ -18,7 +18,7 @@ suite('User API tests', function () {
   setup(() =>
     service.resetDB().then(dbData => {
       users = dbData.users;
-      fixtures = require('./fixtures.json');
+      fixtures = require('./data/fixtures.json');
     })
   );
   suiteTeardown(() => service.stop());

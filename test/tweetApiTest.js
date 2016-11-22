@@ -20,7 +20,7 @@ suite('Tweet API tests', function () {
     service.resetDB().then(dbData => {
       users = dbData.users;
 
-      fixtures = require('./fixtures.json');
+      fixtures = require('./data/fixtures.json');
 
       return Tweet.find({}).sort({ createdAt: 'desc' }).limit(50).populate('creator').exec();
     }).then((populatedTweets) => {
@@ -111,7 +111,7 @@ suite('Tweet API tests', function () {
 
   test('create tweet with valid parameters (with image)', () => {
     let createdTweet;
-    const imagePath =  `${__dirname}/sample.jpg`;
+    const imagePath =  `${__dirname}/data/sample.jpg`;
 
     return service.createAPITweet(users[0]._id, fixtures.new_tweet, imagePath).then((res) => {
       createdTweet = res.json;

@@ -25,7 +25,7 @@ class TwitterService {
    */
   resetDB() {
     const seeder = require('mongoose-seeder');
-    const seedData = require('./seed.json');
+    const seedData = require('./data/seed.json');
 
     // Insert consistent db contents for tests
     return seeder.seed(seedData, { dropDatabase: false, dropCollections: true })
