@@ -1,0 +1,57 @@
+menu {
+    margin: 0;
+    padding: 0;
+}
+
+#main-content {
+    min-height: 100vh;
+    padding-top: 64px;
+}
+
+
+
+
+/** Landing Page **/
+.landig-page {
+    color: white;
+}
+.landig-page a {
+    color: white;
+}
+.landig-page h1 {
+    font-size: 76px;
+}
+.landig-page h2 {
+    font-size: 32px;
+}
+.landig-page .ui.button {
+    background-color: white;
+    color: black;
+    margin: 16px;
+    margin-top: 32px;
+}
+
+.center-both {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+#fullscreen-image {
+    z-index: -999;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    background: url(/images/parrot_background.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}

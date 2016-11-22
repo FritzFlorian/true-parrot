@@ -10,19 +10,24 @@
   <link rel="shortcut icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
-<section class="ui container">
-  {{{content}}}
-</section>
-<script>
-  $(document).ready(function () {
-    $('.ui.dropdown').dropdown({ on: 'hover' });
-    $('.message .close')
-        .on('click', function() {
-          $(this)
-              .closest('.message')
-              .transition('fade');
-        });
-  });
-</script>
+  {{> header }}
+
+  <section class="ui container" id="main-content">
+    {{{content}}}
+  </section>
+
+  {{> footer }}
+
+  <script>
+    $(document).ready(function () {
+      $('.ui.dropdown').dropdown({ on: 'hover' });
+      $('.message .close')
+          .on('click', function() {
+            $(this)
+                .closest('.message')
+                .transition('fade');
+          });
+    });
+  </script>
 </body>
 </html>

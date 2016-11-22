@@ -1,9 +1,9 @@
-const Sample = require('./controllers/sample');
+const Main = require('./controllers/main');
 const Assets = require('./controllers/assets');
 
 module.exports = [
 
-  { method: 'GET', path: '/', config: Sample.main },
+  { method: 'GET', path: '/', config: Main.main },
 
   {
     method: 'GET',

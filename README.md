@@ -13,3 +13,18 @@ Then simply clone the repo, run `npm install` and then run `npm run start`.
 
 To run the tests use `npm run test`.
 To run code coverage use `npm run coverage`.
+
+## Attribution
+
+A list of attributions of content used in this project:
+
+- Parrot Logo:
+  - Source: https://thenounproject.com/term/parrot/6090/
+  - Author: Cengiz SARI, https://thenounproject.com/cengizsari/
+- Round Parrot:
+  - Source: https://thenounproject.com/term/parrot/210502/
+  - Author: Andrey Krylov, https://thenounproject.com/kryptonlove/
+- Parrot Background:
+  - Source: https://www.flickr.com/photos/mdpettitt/2744081052/
+  - Author: Martin Pettitt, https://www.flickr.com/photos/mdpettitt/
+  - Notes: Edited the Image (darker/blured as background graphic)
