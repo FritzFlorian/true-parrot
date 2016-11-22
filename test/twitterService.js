@@ -100,13 +100,15 @@ class TwitterService {
 
   createAPITweet(userId, tweetParams, tweetImagePath) {
     const form = new FormData();
-    form.append('json', JSON.stringify(tweetParams));
+    form.append('json', JSON.stringify(tweetParams), { contentType: 'application/json'});
     if (tweetImagePath) {
       form.append('image', fs.createReadStream(tweetImagePath));
     }
 
+    const headers = form.getHeaders();
+
     return streamToPromise(form).then(payload =>
-             this.requestService.post(`/api/users/${userId}/tweets`, payload)
+             this.requestService.post(`/api/users/${userId}/tweets`, payload, headers)
            );
   }
 

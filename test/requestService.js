@@ -9,8 +9,8 @@ class RequestService {
     return this.makeRequest({ url: route, method: 'GET' });
   }
 
-  post(route, payload = {}) {
-    return this.makeRequest({ url: route, method: 'POST', payload: payload });
+  post(route, payload = {}, headers = {}) {
+    return this.makeRequest({ url: route, method: 'POST', payload: payload, headers: headers });
   }
 
   patch(route, payload = {}) {
