@@ -13,7 +13,7 @@ exports.main = {
     },
   },
   handler: function (request, reply) {
-    reply.view('main', { title: 'Welcome to Twitter-Clone' });
+    reply.view('main', { title: 'Welcome to True Parrot' });
   },
 
 };
