@@ -182,8 +182,10 @@ exports.updateSettings = {
 };
 
 exports.profile = {
-  auth: false,
-
+  auth: {
+    mode: 'try',
+    strategy: 'session',
+  },
   handler: function (request, reply) {
     User.findOne({ _id: request.params.id }).then((user) => {
       if (user) {
