@@ -81,9 +81,15 @@ function startHapiServer(db, resolve, reject) {
 }
 
 function createDefaultContext(request) {
-  const loggedIn = request.auth.credentials.loggedIn;
+  let loggedIn = false;
+  if (request.auth.credentials) {
+    loggedIn = true;
+  }
 
-  return { loggedIn: loggedIn };
+  return {
+    loggedIn: loggedIn,
+    title: 'True Parrot',
+  };
 }
 
 /**
