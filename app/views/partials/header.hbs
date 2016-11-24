@@ -1,6 +1,10 @@
 <header class="ui fixed menu">
   <menu class="ui container">
-    <a class="header item" href="/">
+    {{#if loggedIn}}
+      <a class="header item" href="/feed">
+    {{else}}
+      <a class="header item" href="/">
+    {{/if}}
       <img class="logo" src="/images/parrot.svg"/>
       True Parrot
     </a>
