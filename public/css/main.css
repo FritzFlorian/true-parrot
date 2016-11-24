@@ -12,7 +12,18 @@ menu a {
     padding-top: 64px;
 }
 
+.masonry-grid {
+}
+.masonry-grid:after {
+    content: '';
+    clear: both;
+    display: block;
+}
 
+.masonry-grid-item{
+    float: left;
+    margin: 10px;
+}
 
 
 /** Landing Page **/

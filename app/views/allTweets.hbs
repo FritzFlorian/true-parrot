@@ -1,5 +1,9 @@
 <section class="ui raised segment">
-  {{#each tweets}}
-    {{> tweet}}
-  {{/each}}
+  <div class="masonry-grid">
+    {{#each tweets}}
+      <div class="masonry-grid-item">
+        {{> tweet}}
+      </div>
+    {{/each}}
+  </div>
 </section>

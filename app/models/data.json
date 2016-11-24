@@ -21,6 +21,7 @@
     }
   },
   "tweets": {
+    "_model": "Tweet",
     "homer_donuts": {
       "message": "Donuts Time, soooo tasty.",
       "creator": "->users.homer",
@@ -33,12 +34,37 @@
       "createdAt": "=new Date('2016-10-15T16:30:00')",
       "updatedAt": "=new Date('2016-10-15T16:30:00')"
     },
-    "_model": "Tweet",
     "homer_hello": {
       "message": "Hello Springfield!",
       "creator": "->users.homer",
       "createdAt": "=new Date('2016-10-15T13:30:00')",
       "updatedAt": "=new Date('2016-10-15T13:30:00')",
+      "image": "http://placehold.it/350x150"
+    },
+    "homer_moes": {
+      "message": "On my way to moes.",
+      "creator": "->users.homer",
+      "createdAt": "=new Date('2016-11-22T13:30:00')",
+      "updatedAt": "=new Date('2016-11-22T13:30:00')",
+      "image": "http://placehold.it/350x150"
+    },
+    "marge_app": {
+      "message": "Wow, this new app is exciting.",
+      "creator": "->users.marge",
+      "createdAt": "=new Date('2016-11-15T16:30:00')",
+      "updatedAt": "=new Date('2016-11-15T16:30:00')"
+    },
+    "marge_typo": {
+      "message": "eoauoaeuoeau",
+      "creator": "->users.marge",
+      "createdAt": "=new Date('2016-11-23T16:30:00')",
+      "updatedAt": "=new Date('2016-11-23T16:30:00')"
+    },
+    "marge_moes": {
+      "message": "Homer J. Simpson, you better come home before I find you at moes.",
+      "creator": "->users.marge",
+      "createdAt": "=new Date('2016-11-22T13:45:00')",
+      "updatedAt": "=new Date('2016-11-22T13:45:00')",
       "image": "http://placehold.it/350x150"
     }
   }

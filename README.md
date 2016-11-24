@@ -28,3 +28,11 @@ A list of attributions of content used in this project:
   - Source: https://www.flickr.com/photos/mdpettitt/2744081052/
   - Author: Martin Pettitt, https://www.flickr.com/photos/mdpettitt/
   - Notes: Edited the Image (darker/blured as background graphic)
+- jQuery Masonry:
+  - Source: http://masonry.desandro.com
+  - Author: David DeSandro
+  - License: MIT, https://desandro.mit-license.org/
+- jQuery Images Loaded:
+  - Source: https://github.com/desandro/imagesloaded
+  - Author David DeSandro
+  - License: MIT, https://desandro.mit-license.org/
