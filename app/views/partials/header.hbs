@@ -8,9 +8,11 @@
       <img class="logo" src="/images/parrot.svg"/>
       True Parrot
     </a>
-    <a class="header item" href="/tweet">
-      Tweet
-    </a>
+    {{#if loggedIn}}
+      <a class="header item" href="/tweet">
+        Tweet
+      </a>
+    {{/if}}
 
     <div class="right menu">
       {{#if loggedIn}}
