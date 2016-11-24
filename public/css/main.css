@@ -18,6 +18,10 @@ menu a {
     display: inline-block;
 }
 
+.above {
+    z-index: 99999 !important;
+}
+
 /** Tweet Grid **/
 .masonry-grid {
 }
