@@ -1,22 +1,12 @@
 <section class="ui raised segment">
-  <div class="ui card">
-    <div class="image">
-      <img src="{{user.gravatar}}">
-    </div>
-    <div class="content">
-      <a class="header">{{user.firstName}} {{user.lastName}}</a>
-      <div class="meta">
-        <span class="date">Joined at {{user.createdAt}}</span>
-      </div>
-      <div class="description">
-        Profile Description Text
+  <div class="ui stackable column grid">
+    <div class="six wide column" id="context">
+      <div class="ui sticky" style="padding: 10px;">
+        {{> userCard }}
       </div>
     </div>
-    <div class="extra content">
-      <a>
-        <i class="user icon"></i>
-        Additional stats of user
-      </a>
+    <div class="ten wide column">
+      {{> tweetList }}
     </div>
   </div>
 </section>

@@ -8,10 +8,17 @@ menu a {
 }
 
 #main-content {
-    min-height: 100vh;
     padding-top: 64px;
 }
 
+.center-content {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-block;
+}
+
+/** Tweet Grid **/
 .masonry-grid {
 }
 .masonry-grid:after {

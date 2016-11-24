@@ -1,6 +1,7 @@
 'use strict';
 
 const User = require('../models/user');
+const Tweet = require('../models/tweet');
 
 const Joi = require('joi');
 const gravatar = require('gravatar');
@@ -187,12 +188,25 @@ exports.profile = {
     strategy: 'session',
   },
   handler: function (request, reply) {
-    User.findOne({ _id: request.params.id }).then((user) => {
-      if (user) {
-        delete user.password;
-        user.gravatar = gravatar.url(user.email,  { s: '400' });
+    let user;
 
-        reply.view('profile', { user: user });
+    User.findOne({ _id: request.params.id }).then((foundUser) => {
+      if (foundUser) {
+        delete foundUser.password;
+        user = foundUser;
+
+        return Tweet
+                .find({ creator: user._id })
+                .sort({ createdAt: 'desc' })
+                .limit(50)
+                .populate('creator')
+                .exec();
+      } else {
+        return null;
+      }
+    }).then((tweets) => {
+      if (user) {
+        reply.view('profile', { user: user, tweets: tweets });
       } else {
         reply.redirect('/');
       }
