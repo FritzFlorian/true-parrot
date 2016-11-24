@@ -18,6 +18,7 @@ module.exports = [
   { method: 'GET', path: '/users/{id}', config: User.profile },
 
   { method: 'GET', path: '/feed', config: Tweet.showAll },
+  { method: 'GET', path: '/tweet', config: Tweet.form },
 
   {
     method: 'GET',

@@ -1,0 +1,15 @@
+<section class="ui raised segment">
+  <form action="/tweets" method="POST" class="ui form">
+    <h3 class="ui dividing header">Share your mind with the world!</h3>
+    <div class="field">
+      <label>Message (max. 140 Characters)</label>
+      <input placeholder="Message" value="{{tweet.message}}" type="text" name="message">
+    </div>
+    <div class="field">
+      <label>Image (optional)</label>
+      <input type="file" name="file">
+    </div>
+    <button class="ui blue submit button">Post</button>
+  </form>
+  {{> formerror }}
+</section>

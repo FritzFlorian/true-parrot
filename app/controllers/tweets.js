@@ -20,3 +20,9 @@ exports.showAll = {
     });
   },
 };
+
+exports.form = {
+  handler: function (request, reply) {
+    reply.view('createTweet');
+  },
+}
