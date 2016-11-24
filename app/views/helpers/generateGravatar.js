@@ -3,7 +3,7 @@
 const gravatar = require('gravatar');
 
 const generateGravatar = function (email, size, context) {
-  const options = {}
+  const options = {};
   if (context) {
     options.s = size;
   } else {
