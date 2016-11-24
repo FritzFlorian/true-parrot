@@ -89,12 +89,10 @@ exports.create = {
         },
     };
 
-    const maxImageSize = 1000;
-
     if (request.payload.image) {
       const stream = cloudinary.uploader.upload_stream((result) => {
         createTweet(request.payload.json, result.url, request.params.id, reply);
-      }, { width: maxImageSize, height: maxImageSize, crop: 'limit', format: 'jpg' });
+      }, Tweet.cropOptions);
       request.payload.image.pipe(stream);
     } else {
       createTweet(request.payload.json, null, request.params.id, reply);

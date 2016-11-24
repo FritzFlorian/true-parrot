@@ -21,5 +21,12 @@ Tweet.validationSchema = {
   }).required(),
   image: Joi.any(),
 };
+Tweet.webValidationSchema = {
+  message: Joi.string().min(1).max(140).required(),
+  image: Joi.any(),
+};
+
+const maxImageSize = 1000;
+Tweet.cropOptions = { width: maxImageSize, height: maxImageSize, crop: 'limit', format: 'jpg' };
 
 module.exports = Tweet;

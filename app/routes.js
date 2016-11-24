@@ -19,6 +19,7 @@ module.exports = [
 
   { method: 'GET', path: '/feed', config: Tweet.showAll },
   { method: 'GET', path: '/tweet', config: Tweet.form },
+  { method: 'POST', path: '/tweets', config: Tweet.create },
 
   {
     method: 'GET',
