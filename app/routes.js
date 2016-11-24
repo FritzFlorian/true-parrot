@@ -20,6 +20,7 @@ module.exports = [
   { method: 'GET', path: '/feed', config: Tweet.showAll },
   { method: 'GET', path: '/tweet', config: Tweet.form },
   { method: 'POST', path: '/tweets', config: Tweet.create },
+  { method: 'POST', path: '/tweets/{id}/delete', config: Tweet.deleteOne },
 
   {
     method: 'GET',

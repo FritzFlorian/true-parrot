@@ -13,9 +13,52 @@
     </div>
   {{/if}}
   <div class="extra content">
-        <span class="right floated">
-          <img class="ui avatar image" src="/images/parrot_round.svg"></img>
-          9 parroting
-        </span>
+    <!-- Delete Action -->
+    <!-- TODO: Ask/research on how to do this properly -->
+    <a id="delete-{{ _id }}">
+      <i class="big trash icon"></i>
+      Delete
+    </a>
+    <div class="ui small modal" id="delete-{{ _id }}-modal">
+      <div class="header">
+        Delete Item
+      </div>
+      <div class="content">
+        <span>Would you like to delete this item?</span>
+      </div>
+      <div class="actions">
+        <div class="ui black deny button">
+          Nope
+        </div>
+        <div class="ui red positive right labeled icon button">
+          Yes, delete it
+          <i class="trash icon"></i>
+        </div>
+      </div>
+    </div>
+    <script>
+      $('#delete-{{ _id }}').click(function() {
+        $('#delete-{{ _id }}-modal')
+            .modal({
+              onApprove: function () {
+                $('<form action="/tweets/{{ _id }}/delete" method="POST"></form>').submit();
+              }
+            })
+            .modal('show');
+      });
+    </script>
+    <!-- End delete Action -->
+
+    <a class="right floated" id="parrot-{{ _id }}">
+      <img class="ui icon image" src="/images/parrot_round.svg" style="fill: #ace63c;"/>
+      9 parroting
+      <script>
+        $('#parrot-{{ _id }}').click(function() {
+          $.post('/tweets/{{ _id }}/parrot', function(data) {
+            location.reload();
+          });
+        });
+      </script>
+    </a>
   </div>
 </div>

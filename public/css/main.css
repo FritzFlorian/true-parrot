@@ -18,6 +18,11 @@ menu a {
     display: inline-block;
 }
 
+.ui.icon.image {
+    height: 28px;
+    width: auto;
+}
+
 .above {
     z-index: 99999 !important;
 }

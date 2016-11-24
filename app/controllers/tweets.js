@@ -93,3 +93,12 @@ function createTweet(message, tweetImage, userId, reply) {
   });
 }
 
+exports.deleteOne = {
+  handler: function (request, reply) {
+    Tweet.remove({ _id: request.params.id }).then((tweet) => {
+      reply().redirect('/users/' + request.auth.credentials.loggedInUserId);
+    }).catch((error) => {
+      reply.redirect('/');
+    });
+  },
+}
