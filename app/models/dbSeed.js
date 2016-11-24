@@ -6,13 +6,14 @@
 
 const db = require('./db.js');
 
-db.once('open', () => {
+db.start().connection.once('open', () => {
   console.log('Starting to load seed data to db...');
 
   const seeder = require('mongoose-seeder');
   const data = require('./data.json');
 
   require('./user');
+  require('./tweet');
   seeder.seed(data, { dropDatabase: false, dropCollections: true }).then(dbData => {
     console.log('Seeded data: ');
     console.log(dbData);

@@ -3,6 +3,7 @@
 const Main = require('./controllers/main');
 const Assets = require('./controllers/assets');
 const User = require('./controllers/users');
+const Tweet = require('./controllers/tweets');
 
 module.exports = [
 
@@ -15,6 +16,8 @@ module.exports = [
   { method: 'GET', path: '/settings', config: User.viewSettings },
   { method: 'POST', path: '/settings', config: User.updateSettings },
   { method: 'GET', path: '/users/{id}', config: User.profile },
+
+  { method: 'GET', path: '/feed', config: Tweet.showAll },
 
   {
     method: 'GET',
