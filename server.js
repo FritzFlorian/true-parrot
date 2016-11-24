@@ -55,6 +55,7 @@ function startHapiServer(db, resolve, reject) {
       path: './app/views',
       layoutPath: './app/views/layout',
       partialsPath: './app/views/partials',
+      helpersPath: './app/views/helpers',
       layout: true,
       isCached: false,
       context: createDefaultContext,
