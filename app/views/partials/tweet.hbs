@@ -1,8 +1,10 @@
 <div class="ui card">
   <div class="content">
     <div class="right floated meta">{{timeAgo createdAt}}</div>
-    <img class="ui avatar image" src="{{generateGravatar creator.email}}">
-    {{creator.firstName}} {{creator.lastName}}
+    <a href="/users/{{creator._id}}">
+      <img class="ui avatar image" src="{{generateGravatar creator.email}}">
+      {{creator.firstName}} {{creator.lastName}}
+    </a>
   </div>
   <div class="content">
     <p>{{message}}</p>
