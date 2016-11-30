@@ -20,13 +20,15 @@
     {{/canDeletePost}}
 
     <a class="right floated" id="parrot-{{ _id }}">
-      <img class="ui icon image" src="/images/parrot_round.svg" style="fill: #ace63c;"/>
+      {{#hasParroted this}}
+        <img class="ui icon image" src="/images/parrot_round_highlight.svg"/>
+      {{else}}
+        <img class="ui icon image" src="/images/parrot_round.svg"/>
+      {{/hasParroted}}
       {{parroting.length}} parroting
       <script>
         $('#parrot-{{ _id }}').click(function() {
-          $.post('/tweets/{{ _id }}/parrot', function(data) {
-            location.reload();
-          });
+          $('<form action="/tweets/{{ _id }}/parrot" method="POST"></form>').submit();
         });
       </script>
     </a>

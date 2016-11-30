@@ -21,6 +21,7 @@ module.exports = [
   { method: 'GET', path: '/tweet', config: Tweet.form },
   { method: 'POST', path: '/tweets', config: Tweet.create },
   { method: 'POST', path: '/tweets/{id}/delete', config: Tweet.deleteOne },
+  { method: 'POST', path: '/tweets/{id}/parrot', config: Tweet.parrot },
 
   {
     method: 'GET',

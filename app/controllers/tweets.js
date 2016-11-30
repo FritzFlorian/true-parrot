@@ -73,7 +73,8 @@ exports.create = {
       }, Tweet.cropOptions);
       request.payload.image.pipe(stream);
     } else {
-      createTweet(request.payload.message, null, request.auth.credentials.loggedInUserId, request, reply);
+      createTweet(request.payload.message, null, request.auth.credentials.loggedInUserId,
+                    request, reply);
     }
   },
 };
@@ -114,6 +115,44 @@ exports.deleteOne = {
         request.yar.flash('info', ['An internal error occurred, please try again.'], true);
         reply.redirect('/tweets');
       }
+    }).catch((error) => {
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+      reply.redirect('/tweets');
+    });
+  },
+};
+
+exports.parrot = {
+  handler: function (request, reply) {
+    let alreadyParroting = false;
+
+    Tweet.findOne({ _id: request.params.id }).then((tweet) => {
+      if (tweet) {
+        let newParrotings = tweet.parroting.filter((currentId) => {
+          if (currentId.equals(request.auth.credentials.loggedInUserId)) {
+            alreadyParroting = true;
+            return false;
+          }
+
+          return true;
+        });
+
+        if (!alreadyParroting) {
+          newParrotings.push(request.auth.credentials.loggedInUserId);
+        }
+
+        return tweet.update({ parroting: newParrotings });
+      } else {
+        throw 'Could not find tweet!';
+      }
+    }).then((newTweet) => {
+      if (alreadyParroting) {
+        request.yar.flash('info', ['Un-Parroted the tweet.'], true);
+      } else {
+        request.yar.flash('info', ['Parroted the tweet.'], true);
+      }
+
+      reply.redirect('/tweets');
     }).catch((error) => {
       request.yar.flash('info', ['An internal error occurred, please try again.'], true);
       reply.redirect('/tweets');
