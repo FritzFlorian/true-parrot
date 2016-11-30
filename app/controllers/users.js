@@ -184,6 +184,7 @@ exports.updateSettings = {
 
     User.findByIdAndUpdate({ _id: currentUserId },  { $set: request.payload }, { new: true })
         .then((user) => {
+          request.yar.flash('info', ['Updated Settings.'], true);
           reply.view('settings', { title: 'Account Settings', user: user });
         }).catch((error) => {
           request.yar.flash('info', ['An internal error occurred, please try again.'], true);
