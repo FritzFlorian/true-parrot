@@ -18,7 +18,8 @@ exports.signup = {
   },
   handler: function (request, reply) {
     if (request.auth.isAuthenticated) {
-      reply.redirect('/');
+      request.yar.flash('info', ['You are already logged in.'], true);
+      reply.redirect('/tweets');
       return;
     }
 
@@ -49,9 +50,11 @@ exports.register = {
     const user = new User(request.payload);
 
     user.save().then(newUser => {
+      request.yar.flash('info', ['Successfully Registered. Please Login.'], true);
       reply.redirect('/login');
     }).catch(err => {
-      reply.redirect('/');
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+      reply.redirect('/signup');
     });
   },
 };
@@ -68,7 +71,8 @@ exports.login = {
   },
   handler: function (request, reply) {
     if (request.auth.isAuthenticated) {
-      reply.redirect('/');
+      request.yar.flash('info', ['You are already logged in.'], true);
+      reply.redirect('/tweets');
       return;
     }
 
@@ -116,7 +120,8 @@ exports.authenticate = {
         }).code(400);
       }
     }).catch(err => {
-      reply.redirect('/');
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+      reply.redirect('/login');
     });
   },
 };
@@ -135,6 +140,8 @@ exports.logout = {
   auth: false,
   handler: function (request, reply) {
     request.cookieAuth.clear();
+
+    request.yar.flash('info', ['You successfully logged out of your account.'], true);
     reply.redirect('/');
   },
 };
@@ -177,7 +184,8 @@ exports.updateSettings = {
         .then((user) => {
           reply.view('settings', { title: 'Account Settings', user: user });
         }).catch((error) => {
-          reply.redirect('/');
+          request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+          reply.redirect('/settings');
         });
   },
 };
@@ -213,10 +221,12 @@ exports.profile = {
       if (user) {
         reply.view('profile', { user: user, tweets: tweets });
       } else {
-        reply.redirect('/');
+        request.yar.flash('info', ['Could not find this user.'], true);
+        reply.redirect('/tweets');
       }
     }).catch((error) => {
-      reply.redirect('/');
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+      reply.redirect('/tweets');
     });
   },
 };

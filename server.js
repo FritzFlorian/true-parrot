@@ -29,8 +29,32 @@ function startHapiServer(db, resolve, reject) {
   const server = new Hapi.Server();
   server.connection({ port: process.env.PORT || 4000 });
 
+  // Needed to retrieve the flashes before the yar code runs
+  // as the default context method of handlebars runs too late.
+  server.ext('onPreResponse', function (request, reply) {
+    if (request.response.variety === 'view') {
+      request.flashMessages = request.yar.flash('info');
+    }
+
+    reply.continue();
+  });
+
+  // Options for the yar cookie (holding flash messages)
+  const yarOptions = {
+    register: require('yar'),
+    options: {
+      storeBlank: false,
+      cookieOptions: {
+        password: process.env.COOKIE_PASSWORD || 'oaetsuhneosauhtl}+soaenhulo]a}(+sautehuieieueaut',
+        isSecure: process.env.NODE_ENV === 'production',
+      },
+      name: 'flash-session',
+    },
+  };
+
   // Register Plugins
-  server.register([require('inert'), require('vision'), require('hapi-auth-cookie')], error => {
+  server.register([require('inert'), require('vision'), require('hapi-auth-cookie'), yarOptions],
+                    error => {
 
     /* istanbul ignore if */
     if (error) {
@@ -41,7 +65,7 @@ function startHapiServer(db, resolve, reject) {
     server.auth.strategy('session', 'cookie', true, {
       password: process.env.COOKIE_PASSWORD || 'oean531Oeuoeau}{oeuaoeu{}uoeauoeu',
       cookie: 'twitter-cookie',
-      isSecure: false,
+      isSecure: process.env.NODE_ENV === 'production',
       ttl: 24 * 60 * 60 * 1000,
       redirectTo: '/login',
     });
@@ -79,6 +103,7 @@ function startHapiServer(db, resolve, reject) {
   });
 }
 
+// Default Context to save typing in each view
 function createDefaultContext(request) {
   let loggedIn = false;
   let gravatarUrl = '';
@@ -93,6 +118,7 @@ function createDefaultContext(request) {
   }
 
   return {
+    flashMessages: request.flashMessages,
     loggedIn: loggedIn,
     gravatar: gravatarUrl,
     fullName: fullName,

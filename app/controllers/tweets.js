@@ -29,6 +29,7 @@ exports.showAll = {
     .exec().then((tweets) => {
       reply.view('allTweets', { tweets: tweets });
     }).catch((error) => {
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
       reply.redirect('/');
     });
   },
@@ -67,16 +68,17 @@ exports.create = {
     const image = request.payload.image;
     if (image && image._data && image._data.length > 0) {
       const stream = cloudinary.uploader.upload_stream((result) => {
-        createTweet(request.payload.message, result.url, request.auth.credentials.loggedInUserId, reply);
+        createTweet(request.payload.message, result.url,
+                      request.auth.credentials.loggedInUserId, request, reply);
       }, Tweet.cropOptions);
       request.payload.image.pipe(stream);
     } else {
-      createTweet(request.payload.message, null, request.auth.credentials.loggedInUserId, reply);
+      createTweet(request.payload.message, null, request.auth.credentials.loggedInUserId, request, reply);
     }
   },
 };
 
-function createTweet(message, tweetImage, userId, reply) {
+function createTweet(message, tweetImage, userId, request, reply) {
   let user;
 
   User.findOne({ _id: userId }).then((dbUser) => {
@@ -88,13 +90,16 @@ function createTweet(message, tweetImage, userId, reply) {
       tweet.image = tweetImage;
 
       return new tweet.save().then((tweet) => {
+        request.yar.flash('info', ['Created new tweet.'], true);
         reply.redirect('/users/' + user._id);
       });
     } else {
-      reply.redirect('/');
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+      reply.redirect('/tweet');
     }
   }).catch((error) => {
-    reply.redirect('/');
+    request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+    reply.redirect('/tweet');
   });
 }
 
@@ -103,12 +108,15 @@ exports.deleteOne = {
     Tweet.findOne({ _id: request.params.id }).then((tweet) => {
       if (tweet && tweet.creator == request.auth.credentials.loggedInUserId) {
         tweet.remove();
+        request.yar.flash('info', ['Deleted tweet.'], true);
         reply().redirect('/users/' + request.auth.credentials.loggedInUserId);
       } else {
-        reply.redirect('/');
+        request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+        reply.redirect('/tweets');
       }
     }).catch((error) => {
-      reply.redirect('/');
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+      reply.redirect('/tweets');
     });
   },
-}
+};

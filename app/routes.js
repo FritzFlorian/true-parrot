@@ -17,7 +17,7 @@ module.exports = [
   { method: 'POST', path: '/settings', config: User.updateSettings },
   { method: 'GET', path: '/users/{id}', config: User.profile },
 
-  { method: 'GET', path: '/feed', config: Tweet.showAll },
+  { method: 'GET', path: '/tweets', config: Tweet.showAll },
   { method: 'GET', path: '/tweet', config: Tweet.form },
   { method: 'POST', path: '/tweets', config: Tweet.create },
   { method: 'POST', path: '/tweets/{id}/delete', config: Tweet.deleteOne },

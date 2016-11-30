@@ -17,6 +17,8 @@
   {{> header }}
 
   <section class="ui container" id="main-content">
+    {{> flashMessage }}
+
     {{{content}}}
   </section>
 
@@ -29,11 +31,17 @@
           .on('click', function() {
             $(this)
                 .closest('.message')
-                .transition('fade');
+                .fadeOut({ complete: calculateMasonry });
           });
 
       var $container = $('.masonry-grid');
       $container.imagesLoaded(function(){
+        calculateMasonry();
+      });
+
+      function calculateMasonry() {
+        console.log('calculateMasonry');
+
         $container.masonry({
           // options
           itemSelector: '.masonry-grid-item',
@@ -42,7 +50,7 @@
             margin: '0 auto',
           }
         });
-      });
+      }
 
       $('.ui.sticky')
           .sticky({
