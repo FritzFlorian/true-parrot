@@ -3,18 +3,15 @@
     <img src="{{generateGravatar user.email 290}}">
   </div>
   <div class="content">
-    <a class="header">{{user.firstName}} {{user.lastName}}</a>
+    <a class="header" href="/users/{{user._id}}">{{user.firstName}} {{user.lastName}}</a>
     <div class="meta">
-      <span class="date">Joined at {{user.createdAt}}</span>
+      <span class="date">Joined {{timeAgo user.createdAt}}</span>
     </div>
     <div class="description">
       Profile Description Text
     </div>
   </div>
   <div class="extra content">
-    <a>
-      <i class="user icon"></i>
-      Additional stats of user
-    </a>
+    Did tweet "number" times.
   </div>
 </div>
