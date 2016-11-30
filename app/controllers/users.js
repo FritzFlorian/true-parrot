@@ -204,6 +204,7 @@ exports.profile = {
   },
   handler: function (request, reply) {
     let user;
+    let tweets;
 
     User.findOne({ _id: request.params.id }).then((foundUser) => {
       if (foundUser) {
@@ -219,9 +220,13 @@ exports.profile = {
       } else {
         return null;
       }
-    }).then((tweets) => {
+    }).then((dbTweets) => {
+      tweets = dbTweets;
+
+      return Tweet.count({ creator: user._id });
+    }).then((tweetCount) => {
       if (user) {
-        reply.view('profile', { user: user, tweets: tweets });
+        reply.view('profile', { user: user, tweets: tweets, tweetCount: tweetCount });
       } else {
         request.yar.flash('info', ['Could not find this user.'], true);
         reply.redirect('/tweets');
