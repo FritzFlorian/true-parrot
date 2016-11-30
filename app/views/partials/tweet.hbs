@@ -21,7 +21,7 @@
 
     <a class="right floated" id="parrot-{{ _id }}">
       <img class="ui icon image" src="/images/parrot_round.svg" style="fill: #ace63c;"/>
-      9 parroting
+      {{parroting.length}} parroting
       <script>
         $('#parrot-{{ _id }}').click(function() {
           $.post('/tweets/{{ _id }}/parrot', function(data) {
