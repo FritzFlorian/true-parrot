@@ -107,7 +107,9 @@ exports.authenticate = {
     User.findOne({ email: user.email }).then(foundUser => {
       if (foundUser && foundUser.password === user.password) {
         setCurrentUser(request, foundUser);
-        reply.redirect('/');
+
+        request.yar.flash('info', ['Logged in successfully.'], true);
+        reply.redirect('/tweets');
       } else {
         reply.view('login', {
           title: 'Login error',
