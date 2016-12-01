@@ -47,6 +47,10 @@ class TwitterService {
   }
 
   // User API
+  authenticateAPIUser(params) {
+    return this.requestService.post('/api/users/authenticate', params);
+  }
+
   getAPIUsers() {
     return this.requestService.get('/api/users');
   }

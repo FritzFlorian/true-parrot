@@ -12,6 +12,7 @@ module.exports = [
   { method: 'POST', path: '/api/users', config: UsersApi.create },
   { method: 'PATCH', path: '/api/users/{id}', config: UsersApi.update },
   { method: 'DELETE', path: '/api/users/{id}', config: UsersApi.deleteOne },
+  { method: 'POST', path: '/api/users/authenticate', config: UsersApi.authenticate },
 
   { method: 'GET', path: '/api/tweets', config: TweetsApi.findAll },
   { method: 'GET', path: '/api/tweets/{id}', config: TweetsApi.findOne },

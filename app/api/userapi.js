@@ -3,6 +3,26 @@
 const Boom = require('boom');
 const User = require('../models/user');
 
+const utils = require('./utils.js');
+
+exports.authenticate = {
+  auth: false,
+  handler: function (request, reply) {
+    const user = request.payload;
+    User.findOne({ email: user.email }).then(foundUser => {
+      if (foundUser && foundUser.password === user.password) {
+        const token = utils.createToken(foundUser);
+        reply({ success: true, token: token }).code(201);
+      } else {
+        reply({ success: false, message: 'Authentication failed. User not found.' }).code(201);
+      }
+    }).catch(err => {
+      reply(Boom.notFound('internal db failure'));
+    });
+  },
+
+};
+
 exports.findAll = {
   auth: false,
 

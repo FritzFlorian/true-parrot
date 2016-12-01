@@ -4,6 +4,7 @@ const TwitterService = require('./twitterService');
 const assert = require('chai').assert;
 const _ = require('lodash');
 const User = require('../app/models/user');
+const utils = require('../app/api/utils');
 
 suite('User API tests', function () {
   let fixtures;
@@ -22,6 +23,20 @@ suite('User API tests', function () {
     })
   );
   suiteTeardown(() => service.stop());
+
+  test('authenticate', () =>
+    service.authenticateAPIUser(users[0]).then((res) => {
+      assert.isTrue(res.json.success);
+
+      const token = res.json.token;
+      assert.isDefined(token);
+
+      const userInfo = utils.decodeToken(token);
+      assert.equal(userInfo.email, users[0].email);
+      assert.equal(userInfo.scope.length, users[0].scope.length);
+      assert.equal(userInfo.userId, users[0]._id);
+    })
+  );
 
   test('get users returns database users', () =>
     service.getAPIUsers().then((res) => {
