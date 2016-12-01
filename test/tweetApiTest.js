@@ -25,6 +25,12 @@ suite('Tweet API tests', function () {
       return Tweet.find({}).sort({ createdAt: 'desc' }).limit(50).populate('creator').exec();
     }).then((populatedTweets) => {
       tweets = JSON.parse(JSON.stringify(populatedTweets));
+
+      // Tweet users should not contain passwords
+      tweets.map((tweet) => {
+        delete tweet.creator.password;
+        return tweet;
+      });
     })
   );
   suiteTeardown(() => service.stop());

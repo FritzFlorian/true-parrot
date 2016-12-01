@@ -29,6 +29,7 @@ suite('User API tests', function () {
       assert.equal(res.json.length, users.length);
 
       for (let i = 0; i < users.length; i++) {
+        delete users[i].password; // Server should never send out passwords
         assert.deepEqual(res.json[i], users[i]);
       }
     })
@@ -37,6 +38,8 @@ suite('User API tests', function () {
   test('get user by id returns correct user details', () =>
     service.getAPIUser(users[0]._id).then((res) => {
       assert.equal(res.statusCode, 200);
+
+      delete users[0].password;
       assert.deepEqual(res.json, users[0]);
     })
   );
@@ -81,6 +84,9 @@ suite('User API tests', function () {
       assert.equal(res.statusCode, 201);
       assert(_.some([createdUser], fixtures.new_user),
               'createdUser is a superset of the fixture user');
+
+      // Server should never return a password
+      assernt.isNull(createdUser.password);
 
       return service.getDBUser(createdUser._id);
     }).then((dbUser) => {
