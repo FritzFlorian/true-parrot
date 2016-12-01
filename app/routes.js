@@ -4,6 +4,7 @@ const Main = require('./controllers/main');
 const Assets = require('./controllers/assets');
 const User = require('./controllers/users');
 const Tweet = require('./controllers/tweets');
+const Admin = require('./controllers/admin');
 
 module.exports = [
 
@@ -22,6 +23,8 @@ module.exports = [
   { method: 'POST', path: '/tweets', config: Tweet.create },
   { method: 'POST', path: '/tweets/{id}/delete', config: Tweet.deleteOne },
   { method: 'POST', path: '/tweets/{id}/parrot', config: Tweet.parrot },
+
+  { method: 'GET', path: '/admin', config: Admin.dashboard },
 
   {
     method: 'GET',

@@ -9,6 +9,7 @@ const userSchema = mongoose.Schema({
   email: String,
   password: String,
   description: String,
+  scope: [String],
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
@@ -24,13 +25,15 @@ User.updateApiValidationSchema = {
   firstName: Joi.string(),
   lastName: Joi.string(),
   email: Joi.string().email(),
-  password: Joi.string(),
+  scope: Joi.array().items(Joi.string()),
   description: Joi.string().allow(''),
+  password: Joi.string(),
 };
 User.updateWebValidationSchema = {
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
   email: Joi.string().email().required(),
+  scope: Joi.array().items(Joi.string()),
   description: Joi.string().allow(''),
   password: Joi.string().allow(''),
 };
