@@ -1,6 +1,8 @@
 'use strict';
 
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+
 const password = process.env.JWT_PASSWORD || 'asoetuh!{}l+oestnuhouoe13AOUeothaus';
 
 exports.createToken = function (user) {
@@ -22,3 +24,17 @@ exports.decodeToken = function (token) {
 
   return userInfo;
 };
+
+exports.validate = function (decoded, request, callback) {
+  User.findOne({ _id: decoded.id }).then(user => {
+    if (user != null) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  }).catch(err => {
+    callback(null, false);
+  });
+};
+
+exports.password = password;

@@ -3,6 +3,7 @@
 const Hapi = require('hapi');
 const DB = require('./app/models/db');
 const gravatar = require('gravatar');
+const utils = require('./app/api/utils.js');
 
 class Server {
   constructor(hapiServer, db) {
@@ -53,8 +54,14 @@ function startHapiServer(db, resolve, reject) {
   };
 
   // Register Plugins
-  server.register([require('inert'), require('vision'), require('hapi-auth-cookie'), yarOptions],
-                    error => {
+  const plugins = [
+    require('inert'),
+    require('vision'),
+    require('hapi-auth-cookie'),
+    yarOptions,
+    require('hapi-auth-jwt2'),
+  ];
+  server.register(plugins, error => {
 
     /* istanbul ignore if */
     if (error) {
@@ -83,6 +90,12 @@ function startHapiServer(db, resolve, reject) {
       layout: true,
       isCached: false,
       context: createDefaultContext,
+    });
+
+    server.auth.strategy('jwt', 'jwt', {
+      key: utils.password,
+      validateFunc: utils.validate,
+      verifyOptions: { algorithms: ['HS256'] },
     });
 
     server.route(require('./app/routes'));
