@@ -19,6 +19,10 @@ exports.findAll = {
     .limit(50)
     .populate('creator')
     .exec().then((tweets) => {
+      tweets.map((tweet) => {
+        delete tweet.creator._doc.password;
+        return tweet;
+      });
       reply(tweets);
     }).catch((error) => {
       reply(Boom.badImplementation('error accessing db'));
@@ -35,6 +39,11 @@ exports.findAllByUser = {
     .limit(50)
     .populate('creator')
     .exec().then((tweets) => {
+      tweets.map((tweet) => {
+        delete tweet.creator._doc.password;
+        return tweet;
+      });
+
       reply(tweets);
     }).catch((error) => {
       reply(Boom.badImplementation('error accessing db'));
@@ -48,6 +57,7 @@ exports.findOne = {
   handler: function (request, reply) {
     Tweet.findOne({ _id: request.params.id }).populate('creator').exec().then((tweet) => {
       if (tweet) {
+        delete tweet.creator._doc.password;
         reply(tweet);
       } else {
         reply(Boom.notFound('id not found'));
