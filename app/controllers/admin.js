@@ -2,6 +2,7 @@
 
 const User = require('../models/user');
 const Tweet = require('../models/tweet');
+const moment = require('moment');
 
 exports.dashboard = {
   auth: {
@@ -12,6 +13,7 @@ exports.dashboard = {
     let tweets;
     let tweetCount;
     let userCount;
+    let tweetsPerDay;
 
     Tweet
     .find({})
@@ -30,10 +32,43 @@ exports.dashboard = {
     }).then((dbUserCount) => {
       userCount = dbUserCount;
 
+      const startDate = moment().startOf('day').subtract(7, 'days').toDate();
+      const endDate = moment().toDate();
+
+      return Tweet
+      .aggregate([
+        { // Match Stage
+          $match: { createdAt: { $lt: endDate, $gte: startDate } },
+        },
+        { // Aggregate Stage
+          $group: {
+            _id: {
+              day: { $dayOfMonth: '$createdAt' },
+              month: { $month: '$createdAt' },
+              year: { $year: '$createdAt' },
+            },
+            count: { $sum: 1 },
+          },
+        },
+      ]).exec();
+    }).then((dbTweetsPerDay) => {
+      tweetsPerDay = dbTweetsPerDay.sort((a, b) => {
+        const yearDiff = a._id.year - b._id.year;
+        const monthDiff = a._id.month - b._id.month;
+        const dayDiff = a._id.day - b._id.day;
+
+        return 10000 * yearDiff + 100 * monthDiff + dayDiff;
+      });
+
       return User.find({}).sort({ createdAt: 'desc' }).limit(5).exec();
     }).then((users) => {
-      reply.view('adminDashboard',
-                  { users: users, tweets: tweets, userCount: userCount, tweetCount: tweetCount });
+      reply.view('adminDashboard', {
+            users: users,
+            tweets: tweets,
+            userCount: userCount,
+            tweetCount: tweetCount,
+            tweetsPerDay: tweetsPerDay,
+          });
     }).catch((error) => {
       request.yar.flash('info', ['An internal error occurred, please try again.'], true);
       reply.redirect('/tweets');

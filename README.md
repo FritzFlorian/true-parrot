@@ -24,6 +24,7 @@ A list of attributions of content used in this project:
 - Round Parrot:
   - Source: https://thenounproject.com/term/parrot/210502/
   - Author: Andrey Krylov, https://thenounproject.com/kryptonlove/
+  - Notes: Changed color to a green variant
 - Parrot Background:
   - Source: https://www.flickr.com/photos/mdpettitt/2744081052/
   - Author: Martin Pettitt, https://www.flickr.com/photos/mdpettitt/
@@ -36,3 +37,7 @@ A list of attributions of content used in this project:
   - Source: https://github.com/desandro/imagesloaded
   - Author David DeSandro
   - License: MIT, https://desandro.mit-license.org/
+- Charts.js:
+  - Source: https://github.com/chartjs/Chart.js
+  - Author: Nick Downie
+  - License: MIT, https://github.com/chartjs/Chart.js/blob/master/LICENSE.md

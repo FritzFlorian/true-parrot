@@ -28,6 +28,11 @@ menu a {
     z-index: 99999 !important;
 }
 
+#tweet-chart {
+    width: 100%;
+    height: 600px;
+}
+
 /** Tweet Grid **/
 .masonry-grid {
 }

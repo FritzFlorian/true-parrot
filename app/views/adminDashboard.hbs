@@ -36,6 +36,44 @@
           <p><strong>{{userCount}}</strong> registered Users</p>
           <p><strong>{{tweetCount}}</strong> Tweets</p>
         </div>
+        <div class="ui segment">
+          <canvas id="tweet-chart"></canvas>
+          <script>
+            var ctx = $("#tweet-chart");
+            var myChart = new Chart(ctx, {
+              type: 'bar',
+              options: {
+                scales: {
+                  yAxes: [{
+                    ticks: {
+                      beginAtZero: true,
+                    },
+                  }],
+                },
+              },
+              data: {
+                labels: [
+                  {{#each tweetsPerDay}}
+                    "{{_id.day}}-{{_id.month}}-{{_id.year}}",
+                  {{/each}}
+                ],
+                datasets: [
+                  {
+                    label: "Tweets per Day",
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    data: [
+                      {{#each tweetsPerDay}}
+                        {{count}},
+                      {{/each}}
+                    ],
+                  }
+                ]
+              },
+            });
+          </script>
+        </div>
       </div>
     </div>
   </div>
