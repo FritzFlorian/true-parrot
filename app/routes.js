@@ -27,6 +27,7 @@ module.exports = [
   { method: 'GET', path: '/admin/dashboard', config: Admin.dashboard },
   { method: 'Post', path: '/admin/users/{id}/delete', config: Admin.deleteSingleUser },
   { method: 'GET', path: '/admin/users', config: Admin.listUsers },
+  { method: 'GET', path: '/admin/tweets', config: Admin.listTweets },
 
   {
     method: 'GET',

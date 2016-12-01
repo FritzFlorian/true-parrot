@@ -1,0 +1,35 @@
+<section class="ui raised segment">
+  <h2>Administrate Tweets</h2>
+  <form class="ui form" action="/admin/tweets/delete" method="POST">
+    <div class="fields">
+      <table class="ui celled padded table">
+        <thead>
+          <tr>
+            <th>Message</th>
+            <th>Created At</th>
+            <th>Parroting Count</th>
+            <th>
+              <button class="ui negative button" type="submit">Delete Selected</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each tweets}}
+            <tr>
+              <td>{{message}}</td>
+              <td>{{createdAt}}</td>
+              <td>{{parroting.length}}</td>
+              <td>
+                <div class="inline field">
+                  <div class="ui checkbox">
+                    <input type="checkbox" class="hidden" value="{{_id}}" name="selectedTweets[]">
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </form>
+</section>

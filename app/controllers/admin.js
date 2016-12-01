@@ -100,6 +100,26 @@ exports.listUsers = {
   },
 
   handler: function (request, reply) {
-    reply('admin user list');
+    User.find({}).then((users) => {
+      reply.view('adminUsers', { users: users });
+    }).catch((error) => {
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+      reply.redirect('/admin/dashboard');
+    });
+  },
+};
+
+exports.listTweets = {
+  auth: {
+    scope: 'admin',
+  },
+
+  handler: function (request, reply) {
+    Tweet.find({}).then((tweets) => {
+      reply.view('adminTweets', { tweets: tweets });
+    }).catch((error) => {
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+      reply.redirect('/admin/dashboard');
+    });
   },
 };
