@@ -1,0 +1,42 @@
+<section class="ui raised segment">
+  <h2>Administrate True Parrot</h2>
+  <div class="ui stackable centered column grid">
+    <div class="four wide column" id="context">
+      <div class="ui raised segments">
+        <div class="ui segment">
+          <h3>Latest Tweets</h3>
+          <a href="/admin/tweets">Administrate Tweets</a>
+        </div>
+        <div class="ui segment">
+          {{#each tweets}}
+            {{> tweet }}
+          {{/each}}
+        </div>
+      </div>
+    </div>
+    <div class="four wide column">
+      <div class="ui raised segments">
+        <div class="ui segment">
+          <h3>Latest Users</h3>
+          <a href="/admin/users">Administrate Users</a>
+        </div>
+        <div class="ui segment">
+          {{#each users}}
+            {{> userCard user=this}}
+          {{/each}}
+        </div>
+      </div>
+    </div>
+    <div class="eight wide column" id="context">
+      <div class="ui raised segments">
+        <div class="ui segment">
+          <h3>Stats</h3>
+        </div>
+        <div class="ui segment">
+          <p><strong>{{userCount}}</strong> registered Users</p>
+          <p><strong>{{tweetCount}}</strong> Tweets</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
