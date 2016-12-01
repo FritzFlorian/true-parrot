@@ -1,7 +1,9 @@
 'use strict';
 
+const _ = require('lodash');
+
 const canDeletePost = function (creator, context) {
-  if (context.data.root.userId == creator._id) {
+  if (_.includes(context.data.root.scope, 'admin') || context.data.root.userId == creator._id) {
     return context.fn(this);
   }
 

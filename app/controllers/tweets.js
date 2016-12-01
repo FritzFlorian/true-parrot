@@ -2,6 +2,7 @@
 
 const Tweet = require('../models/tweet');
 const User = require('../models/user');
+const _ = require('lodash');
 
 const cloudinary = require('cloudinary');
 cloudinary.config({
@@ -107,10 +108,13 @@ function createTweet(message, tweetImage, userId, request, reply) {
 exports.deleteOne = {
   handler: function (request, reply) {
     Tweet.findOne({ _id: request.params.id }).then((tweet) => {
-      if (tweet && tweet.creator == request.auth.credentials.loggedInUserId) {
+      if (tweet && (tweet.creator == request.auth.credentials.loggedInUserId ||
+                      _.includes(request.auth.credentials.loggedInUserScope), 'admin')) {
+
         tweet.remove();
+
         request.yar.flash('info', ['Deleted tweet.'], true);
-        reply().redirect('/users/' + request.auth.credentials.loggedInUserId);
+        reply().redirect('/tweets');
       } else {
         request.yar.flash('info', ['An internal error occurred, please try again.'], true);
         reply.redirect('/tweets');

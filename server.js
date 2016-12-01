@@ -109,17 +109,21 @@ function createDefaultContext(request) {
   let gravatarUrl = '';
   let fullName = '';
   let userId = 0;
+  let scope = [];
+
   if (request.auth.isAuthenticated) {
     loggedIn = true;
     gravatarUrl = gravatar.url(request.auth.credentials.loggedInUserEmail);
     fullName = request.auth.credentials.loggedInUserFirstName + ' ' +
                 request.auth.credentials.loggedInUserLastName;
     userId = request.auth.credentials.loggedInUserId;
+    scope = request.auth.credentials.loggedInUserScope;
   }
 
   return {
     flashMessages: request.flashMessages,
     loggedIn: loggedIn,
+    scope: scope,
     gravatar: gravatarUrl,
     fullName: fullName,
     userId: userId,

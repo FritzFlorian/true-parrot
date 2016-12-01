@@ -130,7 +130,7 @@ exports.authenticate = {
 
 function setCurrentUser(request, user) {
   request.cookieAuth.set({
-    scope: user.scope,
+    loggedInUserScope: user.scope,
     loggedInUserId: user._id,
     loggedInUserEmail: user.email,
     loggedInUserFirstName: user.firstName,
