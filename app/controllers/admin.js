@@ -109,6 +109,31 @@ exports.listUsers = {
   },
 };
 
+exports.deleteMultipleUsers = {
+  auth: {
+    scope: 'admin',
+  },
+
+  handler: function (request, reply) {
+    const usersToDelete = request.payload['selectedUsers[]'];
+    let usersDeleted;
+
+    User.remove({ _id: { $in: usersToDelete } }).then((users) => {
+      usersDeleted = users.result.n;
+      return Tweet.remove({ creator: { $in: usersToDelete } });
+    }).then((tweets) => {
+      const message = 'Deleted ' + usersDeleted + ' users and ' +
+                          tweets.result.n + ' related tweets.';
+
+      request.yar.flash('info', [message], true);
+      reply.redirect('/admin/users');
+    }).catch((error) => {
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+      reply.redirect('/admin/users');
+    });
+  },
+};
+
 exports.listTweets = {
   auth: {
     scope: 'admin',
@@ -120,6 +145,24 @@ exports.listTweets = {
     }).catch((error) => {
       request.yar.flash('info', ['An internal error occurred, please try again.'], true);
       reply.redirect('/admin/dashboard');
+    });
+  },
+};
+
+exports.deleteMultipleTweets = {
+  auth: {
+    scope: 'admin',
+  },
+
+  handler: function (request, reply) {
+    const tweetsToDelete = request.payload['selectedTweets[]'];
+
+    Tweet.remove({ _id: { $in: tweetsToDelete } }).then((tweets) => {
+      request.yar.flash('info', ['Deleted ' + tweets.result.n + ' tweets.'], true);
+      reply.redirect('/admin/tweets');
+    }).catch((error) => {
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+      reply.redirect('/admin/tweets');
     });
   },
 };

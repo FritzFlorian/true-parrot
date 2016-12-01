@@ -25,9 +25,11 @@ module.exports = [
   { method: 'POST', path: '/tweets/{id}/parrot', config: Tweet.parrot },
 
   { method: 'GET', path: '/admin/dashboard', config: Admin.dashboard },
-  { method: 'Post', path: '/admin/users/{id}/delete', config: Admin.deleteSingleUser },
+  { method: 'POST', path: '/admin/users/{id}/delete', config: Admin.deleteSingleUser },
   { method: 'GET', path: '/admin/users', config: Admin.listUsers },
+  { method: 'POST', path: '/admin/users/delete', config: Admin.deleteMultipleUsers },
   { method: 'GET', path: '/admin/tweets', config: Admin.listTweets },
+  { method: 'POST', path: '/admin/tweets/delete', config: Admin.deleteMultipleTweets },
 
   {
     method: 'GET',
