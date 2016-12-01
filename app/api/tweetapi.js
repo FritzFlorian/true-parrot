@@ -69,7 +69,9 @@ exports.findOne = {
 };
 
 exports.create = {
-  auth: false,
+  auth: {
+    strategy: 'jwt',
+  },
 
   payload: {
     output: 'stream',
@@ -133,7 +135,9 @@ function createTweet(tweetJson, tweetImage, userId, reply) {
 }
 
 exports.deleteOne = {
-  auth: false,
+  auth: {
+    strategy: 'jwt',
+  },
 
   handler: function (request, reply) {
     Tweet.remove({ _id: request.params.id }).then((tweet) => {

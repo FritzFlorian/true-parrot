@@ -87,7 +87,9 @@ exports.create = {
 };
 
 exports.update = {
-  auth: false,
+  auth: {
+    strategy: 'jwt',
+  },
 
   validate: {
     payload: User.updateApiValidationSchema,
@@ -115,7 +117,9 @@ exports.update = {
 };
 
 exports.deleteOne = {
-  auth: false,
+  auth: {
+    strategy: 'jwt',
+  },
 
   handler: function (request, reply) {
     User.remove({ _id: request.params.id }).then((user) => {
