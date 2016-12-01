@@ -25,6 +25,8 @@ module.exports = [
   { method: 'POST', path: '/tweets/{id}/parrot', config: Tweet.parrot },
 
   { method: 'GET', path: '/admin', config: Admin.dashboard },
+  { method: 'Post', path: '/admin/users/{id}/delete', config: Admin.deleteSingleUser },
+  { method: 'GET', path: '/admin/users', config: Admin.listUsers },
 
   {
     method: 'GET',

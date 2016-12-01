@@ -117,7 +117,7 @@ function createDefaultContext(request) {
     fullName = request.auth.credentials.loggedInUserFirstName + ' ' +
                 request.auth.credentials.loggedInUserLastName;
     userId = request.auth.credentials.loggedInUserId;
-    scope = request.auth.credentials.loggedInUserScope;
+    scope = request.auth.credentials.scope;
   }
 
   return {
