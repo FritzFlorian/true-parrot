@@ -9,6 +9,11 @@
         Tweet
       </a>
     {{/if}}
+    {{#isAdmin}}
+      <a class="header item" href="/admin/dashboard">
+        Admin Dashboard
+      </a>
+    {{/isAdmin}}
 
     <div class="right menu">
       {{#if loggedIn}}
