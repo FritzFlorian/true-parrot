@@ -20,6 +20,8 @@ suite('Tweet API tests', function () {
     service.resetDB().then(dbData => {
       users = dbData.users;
 
+      service.loginAPI(users[0]);
+
       fixtures = require('./data/fixtures.json');
 
       return Tweet.find({}).sort({ createdAt: 'desc' }).limit(50).populate('creator').exec();

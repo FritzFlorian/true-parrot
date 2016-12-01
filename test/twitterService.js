@@ -41,6 +41,14 @@ class TwitterService {
     return this.requestService.get('/api/sample');
   }
 
+  loginAPI(user) {
+    this.requestService.setAuth(user);
+  }
+
+  logoutAPI() {
+    this.requestService.clearAuth();
+  }
+
   // Sample Static page
   getStaticSample() {
     return this.server.hapiServer.inject('/');

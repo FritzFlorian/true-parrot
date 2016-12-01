@@ -19,13 +19,18 @@ suite('User API tests', function () {
   setup(() =>
     service.resetDB().then(dbData => {
       users = dbData.users;
+
+      service.loginAPI(users[0]);
+
       fixtures = require('./data/fixtures.json');
     })
   );
   suiteTeardown(() => service.stop());
 
-  test('authenticate', () =>
-    service.authenticateAPIUser(users[0]).then((res) => {
+  test('authenticate', () => {
+    service.logoutAPI();
+
+    return service.authenticateAPIUser(users[0]).then((res) => {
       assert.isTrue(res.json.success);
 
       const token = res.json.token;
@@ -35,8 +40,8 @@ suite('User API tests', function () {
       assert.equal(userInfo.email, users[0].email);
       assert.equal(userInfo.scope.length, users[0].scope.length);
       assert.equal(userInfo.userId, users[0]._id);
-    })
-  );
+    });
+  });
 
   test('get users returns database users', () =>
     service.getAPIUsers().then((res) => {

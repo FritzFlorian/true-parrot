@@ -1,8 +1,11 @@
 'use strict';
 
+const utils = require('../app/api/utils');
+
 class RequestService {
   constructor(hapiServer) {
     this.hapiServer = hapiServer;
+    this.authHeader = null;
   }
 
   get(route) {
@@ -21,7 +24,19 @@ class RequestService {
     return this.makeRequest({ url: route, method: 'DELETE', payload: payload });
   }
 
+  setAuth(user) {
+    const token = utils.createToken(user);
+    this.authHeader = 'bearer ' + token;
+  }
+
+  clearAuth() {
+    this.authHeader = null;
+  }
+
   makeRequest(params) {
+    params.headers = params.headers || {};
+    params.headers.Authorization = this.authHeader;
+
     return new Promise((resolve, reject) => {
       this.hapiServer.inject(params).then((res) => {
         let json = null;
