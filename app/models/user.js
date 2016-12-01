@@ -15,27 +15,25 @@ const userSchema = mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 User.validationSchema = {
-  firstName: Joi.string().required(),
-  lastName: Joi.string().required(),
+  firstName: Joi.string().min(1).max(26).required(),
+  lastName: Joi.string().min(1).max(26).required(),
   email: Joi.string().email().required(),
-  password: Joi.string().required(),
-  description: Joi.string().allow(''),
+  password: Joi.string().min(6).max(26).required(),
+  description: Joi.string().max(140).allow(''),
 };
 User.updateApiValidationSchema = {
-  firstName: Joi.string(),
-  lastName: Joi.string(),
+  firstName: Joi.string().min(1).max(26),
+  lastName: Joi.string().min(1).max(26),
   email: Joi.string().email(),
-  scope: Joi.array().items(Joi.string()),
-  description: Joi.string().allow(''),
-  password: Joi.string(),
+  description: Joi.string().max(140).allow(''),
+  password: Joi.string().min(6).max(26),
 };
 User.updateWebValidationSchema = {
-  firstName: Joi.string().required(),
-  lastName: Joi.string().required(),
-  email: Joi.string().email().required(),
-  scope: Joi.array().items(Joi.string()),
-  description: Joi.string().allow(''),
-  password: Joi.string().allow(''),
+  firstName: Joi.string().min(1).max(26),
+  lastName: Joi.string().min(1).max(26),
+  email: Joi.string().email(),
+  description: Joi.string().max(140).allow(''),
+  password: Joi.string().min(6).max(26).allow(''),
 };
 
 module.exports = User;

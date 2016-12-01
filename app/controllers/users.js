@@ -23,7 +23,7 @@ exports.signup = {
       return;
     }
 
-    reply.view('signup', { title: 'Sign Up' });
+    reply.view('signup', { title: 'Sign Up', user: {} });
   },
 
 };
@@ -35,9 +35,12 @@ exports.register = {
     payload: User.validationSchema,
 
     failAction: function (request, reply, source, error) {
+      delete request.payload.password;
+
       reply.view('signup', {
         title: 'Sign up error',
         errors: error.data.details,
+        user: request.payload,
       }).code(400);
     },
 
