@@ -8,6 +8,11 @@ exports.findAll = {
 
   handler: function (request, reply) {
     User.find({}).then((users) => {
+      users.map((user) => {
+        delete user._doc.password;
+        return user;
+      });
+
       reply(users);
     }).catch((error) => {
       reply(Boom.badImplementation('error accessing db'));
@@ -23,6 +28,7 @@ exports.findOne = {
       if (user == null) {
         reply(Boom.notFound('id not found'));
       } else {
+        delete user._doc.password;
         reply(user);
       }
     }).catch((error) => {
@@ -52,6 +58,7 @@ exports.create = {
     const user = new User(request.payload);
 
     user.save().then((newUser) => {
+      delete newUser._doc.password;
       reply(newUser).code(201);
     }).catch((error) => {
       reply(Boom.badImplementation('error creating user'));
@@ -79,6 +86,7 @@ exports.update = {
   handler: function (request, reply) {
     User.findByIdAndUpdate({ _id: request.params.id },  { $set: request.payload }, { new: true })
     .then((user) => {
+      delete user.password;
       reply(user).code(200);
     }).catch((error) => {
       reply(Boom.badImplementation('error updating user'));

@@ -81,15 +81,20 @@ suite('User API tests', function () {
     return service.createAPIUser(fixtures.new_user).then((res) => {
       createdUser = res.json;
 
+      // We do not expect to get this password back
+      delete fixtures.new_user.password;
+
       assert.equal(res.statusCode, 201);
       assert(_.some([createdUser], fixtures.new_user),
               'createdUser is a superset of the fixture user');
 
       // Server should never return a password
-      assernt.isNull(createdUser.password);
+      assert.isUndefined(createdUser.password);
 
       return service.getDBUser(createdUser._id);
     }).then((dbUser) => {
+      delete dbUser.password;
+
       assert.deepEqual(createdUser, dbUser);
     });
   });
