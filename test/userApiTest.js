@@ -84,6 +84,18 @@ suite('User API tests', function () {
     })
   );
 
+  test('try deleting other user by id should fail', () =>
+    // We are logged in as users[0]
+    service.deleteAPIUser(users[1]).then((res) => {
+      assert.equal(res.statusCode, 403);
+
+      return service.getDBUsers();
+    }).then((dbUsers) => {
+      // Nothing should be deleted
+      assert.equal(dbUsers.length, users.length);
+    })
+  );
+
   test('try deleting not existing user by id', () =>
     service.deleteAPIUser(users[0]).then((res) => {
       assert.equal(res.statusCode, 404);
@@ -95,7 +107,7 @@ suite('User API tests', function () {
     })
   );
 
-  test('create user with valid parametrs', () => {
+  test('create user with valid parameters', () => {
     let createdUser;
 
     return service.createAPIUser(fixtures.new_user).then((res) => {
@@ -145,6 +157,36 @@ suite('User API tests', function () {
       return service.getDBUser(res.json._id);
     }).then((dbUser) => {
       assert.deepEqual(user, dbUser);
+    });
+  });
+
+  test('try to update user with invalid parameters', () => {
+    const updates = { firstName: '', lastName: 'Name' };
+    const updatedUser = _.merge(users[0], updates);
+    delete updatedUser.updatedAt;
+
+    return service.updateAPIUser(users[0]._id, updates).then((res) => {
+      assert.equal(res.statusCode, 400);
+
+      return service.getDBUser(users[0]._id);
+    }).then((dbUser) => {
+      // DB should have no changes
+      assert(_.some([users[0]], dbUser));
+    });
+  });
+
+  test('try to update other users settings', () => {
+    const updates = { firstName: 'New', lastName: 'Name' };
+    const updatedUser = _.merge(users[1], updates);
+    delete updatedUser.updatedAt;
+
+    return service.updateAPIUser(users[1]._id, updates).then((res) => {
+      assert.equal(res.statusCode, 401);
+
+      return service.getDBUser(users[1]._id);
+    }).then((dbUser) => {
+      // DB should have no changes
+      assert(_.some([users[1]], dbUser));
     });
   });
 });
