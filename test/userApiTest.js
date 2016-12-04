@@ -98,7 +98,7 @@ suite('User API tests', function () {
 
   test('try deleting not existing user by id', () =>
     service.deleteAPIUser(users[0]).then((res) => {
-      assert.equal(res.statusCode, 404);
+      assert.equal(res.statusCode, 403);
 
       return service.getDBUsers();
     }).then((dbUsers) => {

@@ -129,10 +129,16 @@ exports.deleteOne = {
   },
 
   handler: function (request, reply) {
-    User.remove({ _id: request.params.id }).then((user) => {
-      reply().code(204);
-    }).catch((error) => {
-      reply(Boom.notFound('id not found'));
-    });
+    const userInfo = request.auth.credentials;
+
+    if (userInfo.id == request.params.id || _.includes(userInfo.scope, 'admin')) {
+      User.remove({ _id: request.params.id }).then((user) => {
+        reply().code(204);
+      }).catch((error) => {
+        reply(Boom.notFound('id not found'));
+      });
+    } else {
+      reply(Boom.forbidden('insufficient permissions'));
+    }
   },
 };
