@@ -102,7 +102,7 @@ suite('Tweet API tests', function () {
 
   test('try deleting not existing tweet by id', () =>
     service.deleteAPITweet(tweets[0]).then((res) => {
-      assert.equal(res.statusCode, 403);
+      assert.equal(res.statusCode, 404);
 
       return service.getDBTweets();
     }).then((dbTweets) => {
