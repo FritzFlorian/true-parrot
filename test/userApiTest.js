@@ -86,7 +86,7 @@ suite('User API tests', function () {
 
   test('try deleting other user by id should fail', () =>
     // We are logged in as users[0]
-    service.deleteAPIUser(users[1]).then((res) => {
+    service.deleteAPIUser(users[1]._id).then((res) => {
       assert.equal(res.statusCode, 403);
 
       return service.getDBUsers();
@@ -162,8 +162,6 @@ suite('User API tests', function () {
 
   test('try to update user with invalid parameters', () => {
     const updates = { firstName: '', lastName: 'Name' };
-    const updatedUser = _.merge(users[0], updates);
-    delete updatedUser.updatedAt;
 
     return service.updateAPIUser(users[0]._id, updates).then((res) => {
       assert.equal(res.statusCode, 400);
@@ -171,7 +169,7 @@ suite('User API tests', function () {
       return service.getDBUser(users[0]._id);
     }).then((dbUser) => {
       // DB should have no changes
-      assert(_.some([users[0]], dbUser));
+      assert.deepEqual(dbUser, users[0]);
     });
   });
 
