@@ -17,6 +17,6 @@ module.exports = [
   { method: 'GET', path: '/api/tweets', config: TweetsApi.findAll },
   { method: 'GET', path: '/api/tweets/{id}', config: TweetsApi.findOne },
   { method: 'GET', path: '/api/users/{id}/tweets', config: TweetsApi.findAllByUser },
-  { method: 'POST', path: '/api/users/{id}/tweets', config: TweetsApi.create },
+  { method: 'POST', path: '/api/tweets', config: TweetsApi.create },
   { method: 'DELETE', path: '/api/tweets/{id}', config: TweetsApi.deleteOne },
 ];

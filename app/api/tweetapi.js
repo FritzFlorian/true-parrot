@@ -103,13 +103,15 @@ exports.create = {
         },
     };
 
+    const userInfo = request.auth.credentials;
+
     if (request.payload.image) {
       const stream = cloudinary.uploader.upload_stream((result) => {
-        createTweet(request.payload.json, result.url, request.params.id, reply);
+        createTweet(request.payload.json, result.url, userInfo.id, reply);
       }, Tweet.cropOptions);
       request.payload.image.pipe(stream);
     } else {
-      createTweet(request.payload.json, null, request.params.id, reply);
+      createTweet(request.payload.json, null, userInfo.id, reply);
     }
   },
 };
