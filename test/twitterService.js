@@ -110,7 +110,7 @@ class TwitterService {
     return this.requestService.get(`/api/tweets/${id}`);
   }
 
-  createAPITweet(userId, tweetParams, tweetImagePath) {
+  createAPITweet(tweetParams, tweetImagePath) {
     const form = new FormData();
     form.append('json', JSON.stringify(tweetParams), { contentType: 'application/json'});
     if (tweetImagePath) {
@@ -120,7 +120,7 @@ class TwitterService {
     const headers = form.getHeaders();
 
     return streamToPromise(form).then(payload =>
-             this.requestService.post(`/api/users/${userId}/tweets`, payload, headers)
+             this.requestService.post(`/api/tweets`, payload, headers)
            );
   }
 

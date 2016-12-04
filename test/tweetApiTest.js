@@ -90,9 +90,19 @@ suite('Tweet API tests', function () {
     })
   );
 
+  test('try deleteing tweet of other user by id', () =>
+      service.deleteAPITweet(tweets[1]._id).then((res) => {
+        assert.equal(res.statusCode, 403);
+
+        return service.getDBTweet(tweets[1]._id);
+      }).then((tweet) => {
+        assert.isNotNull(tweet);
+      })
+  );
+
   test('try deleting not existing tweet by id', () =>
     service.deleteAPITweet(tweets[0]).then((res) => {
-      assert.equal(res.statusCode, 404);
+      assert.equal(res.statusCode, 403);
 
       return service.getDBTweets();
     }).then((dbTweets) => {
@@ -104,7 +114,7 @@ suite('Tweet API tests', function () {
   test('create tweet with valid parameters (no image)', () => {
     let createdTweet;
 
-    return service.createAPITweet(users[0]._id, fixtures.new_tweet).then((res) => {
+    return service.createAPITweet(fixtures.new_tweet).then((res) => {
       createdTweet = res.json;
 
       assert.equal(res.statusCode, 201);
@@ -121,7 +131,7 @@ suite('Tweet API tests', function () {
     let createdTweet;
     const imagePath =  `${__dirname}/data/sample.jpg`;
 
-    return service.createAPITweet(users[0]._id, fixtures.new_tweet, imagePath).then((res) => {
+    return service.createAPITweet(fixtures.new_tweet, imagePath).then((res) => {
       createdTweet = res.json;
 
       assert.equal(res.statusCode, 201);
@@ -136,18 +146,7 @@ suite('Tweet API tests', function () {
   });
 
   test('try to create tweet without parameters', () =>
-    service.createAPITweet(users[0]._id, {}).then((res) => {
-      assert.equal(res.statusCode, 400);
-
-      return service.getDBTweets();
-    }).then((dbTweet) => {
-      // Nothing should be created
-      assert.equal(dbTweet.length, tweets.length);
-    })
-  );
-
-  test('try to create tweet for invalid user', () =>
-    service.createAPITweet('a'.repeat(24), fixtures.new_tweet).then((res) => {
+    service.createAPITweet({}).then((res) => {
       assert.equal(res.statusCode, 400);
 
       return service.getDBTweets();
