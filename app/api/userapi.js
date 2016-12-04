@@ -4,6 +4,7 @@ const Boom = require('boom');
 const User = require('../models/user');
 
 const utils = require('./utils.js');
+const _ = require('lodash');
 
 exports.authenticate = {
   auth: false,
@@ -106,13 +107,19 @@ exports.update = {
   },
 
   handler: function (request, reply) {
-    User.findByIdAndUpdate({ _id: request.params.id },  { $set: request.payload }, { new: true })
-    .then((user) => {
-      delete user.password;
-      reply(user).code(200);
-    }).catch((error) => {
-      reply(Boom.badImplementation('error updating user'));
-    });
+    const userInfo = request.auth.credentials;
+
+    if (userInfo.id == request.params.id) {
+      User.findByIdAndUpdate({ _id: request.params.id },  { $set: request.payload }, { new: true })
+        .then((user) => {
+          delete user.password;
+          reply(user).code(200);
+        }).catch((error) => {
+          reply(Boom.badImplementation('error updating user'));
+        });
+    } else {
+      reply(Boom.forbidden('insufficient permissions'));
+    }
   },
 };
 

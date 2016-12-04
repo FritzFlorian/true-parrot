@@ -175,16 +175,14 @@ suite('User API tests', function () {
 
   test('try to update other users settings', () => {
     const updates = { firstName: 'New', lastName: 'Name' };
-    const updatedUser = _.merge(users[1], updates);
-    delete updatedUser.updatedAt;
 
     return service.updateAPIUser(users[1]._id, updates).then((res) => {
-      assert.equal(res.statusCode, 401);
+      assert.equal(res.statusCode, 403);
 
       return service.getDBUser(users[1]._id);
     }).then((dbUser) => {
       // DB should have no changes
-      assert(_.some([users[1]], dbUser));
+      assert.deepEqual(dbUser, users[1]);
     });
   });
 });
