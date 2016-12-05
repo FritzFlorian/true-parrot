@@ -33,6 +33,9 @@ suite('User API tests', function () {
     return service.authenticateAPIUser(users[0]).then((res) => {
       assert.isTrue(res.json.success);
 
+      delete users[0].password;
+      assert.deepEqual(res.json.user, users[0]);
+
       const token = res.json.token;
       assert.isDefined(token);
 
