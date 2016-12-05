@@ -4,6 +4,7 @@ const Hapi = require('hapi');
 const DB = require('./app/models/db');
 const gravatar = require('gravatar');
 const utils = require('./app/api/utils.js');
+const corsHeaders = require('hapi-cors-headers');
 
 class Server {
   constructor(hapiServer, db) {
@@ -98,6 +99,7 @@ function startHapiServer(db, resolve, reject) {
       verifyOptions: { algorithms: ['HS256'] },
     });
 
+    server.ext('onPreResponse', corsHeaders);
     server.route(require('./app/routes'));
     server.route(require('./app/routesapi'));
 
