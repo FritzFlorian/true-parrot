@@ -155,4 +155,78 @@ suite('Tweet API tests', function () {
       assert.equal(dbTweet.length, tweets.length);
     })
   );
+
+  test('parrot valid tweet that is not already parroted', () => {
+    let tweet;
+
+    return service.parrotAPITweet(tweets[0]._id, true).then((res) => {
+      assert.equal(res.statusCode, 200);
+      tweet = res.json;
+
+      // The current user should be parroting now
+      assert.isTrue(_.includes(tweet.parroting, users[0]._id));
+
+      return service.getDBTweet(tweet._id);
+    }).then((dbTweet) => {
+      assert.deepEqual(tweet, dbTweet);
+    });
+  });
+
+  test('parrot valid tweet that is already parroted', () => {
+    let tweet;
+
+    return service.parrotAPITweet(tweets[2]._id, true).then((res) => {
+      assert.equal(res.statusCode, 200);
+      tweet = res.json;
+
+      // The current user should be parroting now
+      assert.isTrue(_.includes(tweet.parroting, users[0]._id));
+
+      return service.getDBTweet(tweet._id);
+    }).then((dbTweet) => {
+      assert.deepEqual(tweet, dbTweet);
+    });
+  });
+
+  test('unparrot tweet that is already parroted', () => {
+    let tweet;
+
+    return service.parrotAPITweet(tweets[2]._id, false).then((res) => {
+      assert.equal(res.statusCode, 200);
+      tweet = res.json;
+
+      // The current user should be parroting now
+      assert.isFalse(_.includes(tweet.parroting, users[0]._id));
+
+      return service.getDBTweet(tweet._id);
+    }).then((dbTweet) => {
+      assert.deepEqual(tweet, dbTweet);
+    });
+  });
+
+  test('unparrot tweet that is not parroted', () => {
+    let tweet;
+
+    return service.parrotAPITweet(tweets[0]._id, false).then((res) => {
+      assert.equal(res.statusCode, 200);
+      tweet = res.json;
+
+      // The current user should be parroting now
+      assert.isFalse(_.includes(tweet.parroting, users[0]._id));
+
+      return service.getDBTweet(tweet._id);
+    }).then((dbTweet) => {
+      assert.deepEqual(tweet, dbTweet);
+    });
+  });
+
+  test('parrot non existing tweet', () =>
+    service.parrotAPITweet('abcd', true).then((res) => {
+      assert.equal(res.statusCode, 404);
+
+      return service.parrotAPITweet('a'.repeat(24));
+    }).then((res) => {
+      assert.equal(res.statusCode, 404);
+    })
+  );
 });
