@@ -162,3 +162,40 @@ exports.deleteOne = {
     });
   },
 };
+
+exports.parrotOne = {
+  auth: {
+    strategy: 'jwt',
+  },
+
+  handler: function (request, reply) {
+    let alreadyParroting = false;
+
+    Tweet.findOne({ _id: request.params.id }).then((tweet) => {
+      if (tweet) {
+        // Delete existing parroting of user
+        let newParrotings = tweet.parroting.filter((currentId) => {
+          if (currentId.equals(request.auth.credentials.id)) {
+            return false;
+          }
+
+          return true;
+        });
+
+        // Re-Add the parrot if the user patches to set parroting to true
+        if (request.payload.parroting) {
+          newParrotings.push(request.auth.credentials.id);
+        }
+
+        tweet.parroting = newParrotings;
+        return tweet.save();
+      } else {
+        throw 'id not found';
+      }
+    }).then((newTweet) => {
+      reply(newTweet).code(200);
+    }).catch((error) => {
+      reply(Boom.notFound('id not found'));
+    });
+  },
+};
