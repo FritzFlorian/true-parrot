@@ -15,9 +15,9 @@
     </div>
   {{/if}}
   <div class="extra content">
-    {{#canDeletePost creator}}
+    {{#canDelete creator}}
       {{> deleteTweet }}
-    {{/canDeletePost}}
+    {{/canDelete}}
 
     <a class="right floated" id="parrot-{{ _id }}">
       {{#hasParroted this}}

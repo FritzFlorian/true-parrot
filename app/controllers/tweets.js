@@ -109,7 +109,7 @@ exports.deleteOne = {
   handler: function (request, reply) {
     Tweet.findOne({ _id: request.params.id }).then((tweet) => {
       if (tweet && (tweet.creator == request.auth.credentials.loggedInUserId ||
-                      _.includes(request.auth.credentials.loggedInUserScope), 'admin')) {
+                        hasAdminScope(request.auth.credentials.scope))) {
 
         tweet.remove();
 
@@ -123,6 +123,24 @@ exports.deleteOne = {
       request.yar.flash('info', ['An internal error occurred, please try again.'], true);
       reply.redirect('/tweets');
     });
+  },
+};
+
+exports.deleteAllByUser = {
+  handler: function (request, reply) {
+    if (request.params.id == request.auth.credentials.loggedInUserId ||
+          hasAdminScope(request.auth.credentials.scope)) {
+      Tweet.remove({ creator: request.params.id }).then((result) => {
+        request.yar.flash('info', ['Deleted ' + result.result.n + ' Tweets.'], true);
+        reply.redirect('/users/' + request.params.id);
+      }).catch((error) => {
+        request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+        reply.redirect('/users/' + request.params.id);
+      });
+    } else {
+      request.yar.flash('info', ['No Permission.'], true);
+      reply.redirect('/users/' + request.params.id);
+    }
   },
 };
 
@@ -163,3 +181,7 @@ exports.parrot = {
     });
   },
 };
+
+function hasAdminScope(scope) {
+  return _.includes(scope, 'admin');
+}
