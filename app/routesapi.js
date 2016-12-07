@@ -23,4 +23,5 @@ module.exports = [
   { method: 'PATCH', path: '/api/tweets/{id}/parrot', config: TweetsApi.parrotOne },
 
   { method: 'POST', path: '/api/admin/tweets/batchDelete', config: AdminApi.deleteMultipleTweets },
+  { method: 'POST', path: '/api/admin/users/batchDelete', config: AdminApi.deleteMultipleUsers },
 ];

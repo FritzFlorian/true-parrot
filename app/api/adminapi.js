@@ -16,3 +16,14 @@ exports.deleteMultipleTweets = {
 
   },
 };
+
+exports.deleteMultipleUsers = {
+  auth: {
+    strategy: 'jwt',
+    scope: 'admin',
+  },
+
+  handler: function (request, reply) {
+
+  },
+};

@@ -155,6 +155,10 @@ class TwitterService {
     return this.requestService.post('/api/admin/tweets/batchDelete', tweetIds);
   }
 
+  deleteMultipleAPIUsers(userIds) {
+    return this.requestService.post('/api/admin/users/batchDelete', userIds);
+  }
+
   // Helpers
   seedResultToSimpleArrays(dbData) {
     const result = {};

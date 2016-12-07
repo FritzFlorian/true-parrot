@@ -48,4 +48,63 @@ suite('Admin API tests', function () {
       assert.equal(dbTweets.length, tweets.length - 2);
     });
   });
+
+  test('delete no tweets as admin', function () {
+    const tweetsToDelete = [
+    ];
+
+    return service.deleteMultipleAPITweets(tweetsToDelete).then((res) => {
+      assert.equal(res.statusCode, 204);
+
+      return Tweet.find({});
+    }).then((dbTweets) => {
+      assert.equal(dbTweets.length, tweets.length);
+    });
+  });
+
+  test('try to delete two tweets as non admin', function () {
+    service.logoutAPI();
+    service.loginAPI(users[0]);
+
+    const tweetsToDelete = [
+      tweets[0]._id,
+      tweets[1]._id,
+    ];
+
+    return service.deleteMultipleAPITweets(tweetsToDelete).then((res) => {
+      assert.equal(res.statusCode, 403);
+
+      return Tweet.find({});
+    }).then((dbTweets) => {
+      assert.equal(dbTweets.length, tweets.length);
+    });
+  });
+
+  test('delete two users as admin', function () {
+    const usersToDelete = [
+      tweets[0]._id,
+      tweets[1]._id,
+    ];
+
+    return service.deleteMultipleAPIUsers(usersToDelete).then((res) => {
+      assert.equal(res.statusCode, 204);
+
+      return User.find({});
+    }).then((dbUsers) => {
+      assert.equal(dbUsers.length, users.length - 2);
+    });
+  });
+
+  test('delete no users as admin', function () {
+    const usersToDelete = [
+    ];
+
+    return service.deleteMultipleAPIUsers(usersToDelete).then((res) => {
+      assert.equal(res.statusCode, 204);
+
+      return User.find({});
+    }).then((dbUsers) => {
+      assert.equal(dbUsers.length, users.length);
+    });
+  });
 });
