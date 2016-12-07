@@ -11,7 +11,8 @@
       "firstName": "Marge",
       "lastName": "Simpson",
       "email": "marge@simpson.com",
-      "password": "secret"
+      "password": "secret",
+      "scope": ["admin"]
     },
     "bart": {
       "firstName": "Bart",

@@ -150,6 +150,11 @@ class TwitterService {
     return Tweet.remove({ _id: id });
   }
 
+  // Admin API
+  deleteMultipleAPITweets(tweetIds) {
+    return this.requestService.post('/api/admin/tweets/batchDelete', tweetIds);
+  }
+
   // Helpers
   seedResultToSimpleArrays(dbData) {
     const result = {};

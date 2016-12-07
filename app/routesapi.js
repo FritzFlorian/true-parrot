@@ -3,6 +3,7 @@
 const SampleApi = require('./api/sampleapi');
 const UsersApi = require('./api/userapi');
 const TweetsApi = require('./api/tweetapi');
+const AdminApi = require('./api/adminapi');
 
 module.exports = [
   { method: 'GET', path: '/api/sample', config: SampleApi.find },
@@ -20,4 +21,6 @@ module.exports = [
   { method: 'POST', path: '/api/tweets', config: TweetsApi.create },
   { method: 'DELETE', path: '/api/tweets/{id}', config: TweetsApi.deleteOne },
   { method: 'PATCH', path: '/api/tweets/{id}/parrot', config: TweetsApi.parrotOne },
+
+  { method: 'POST', path: '/api/admin/tweets/batchDelete', config: AdminApi.deleteMultipleTweets },
 ];

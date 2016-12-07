@@ -127,7 +127,9 @@ suite('Tweet API tests', function () {
     });
   });
 
-  test('create tweet with valid parameters (with image)', () => {
+  test('create tweet with valid parameters (with image)', function () {
+    this.timeout(10000);
+
     let createdTweet;
     const imagePath =  `${__dirname}/data/sample.jpg`;
 
