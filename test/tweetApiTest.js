@@ -12,12 +12,13 @@ suite('Tweet API tests', function () {
   let tweets;
 
   // Reset all data (and fixtures), so we can create each test fully isolated.
-  suiteSetup(() => {
+  suiteSetup(function () {
     service = new TwitterService();
     return service.start();
   });
-  setup(() =>
-    service.resetDB().then(dbData => {
+
+  setup(function () {
+    return service.resetDB().then(dbData => {
       users = dbData.users;
 
       service.loginAPI(users[0]);
@@ -33,12 +34,15 @@ suite('Tweet API tests', function () {
         delete tweet.creator.password;
         return tweet;
       });
-    })
-  );
-  suiteTeardown(() => service.stop());
+    });
+  });
 
-  test('get tweets returns global timeline of tweets', () =>
-    service.getAPITweets().then((res) => {
+  suiteTeardown(function () {
+    return service.stop();
+  });
+
+  test('get tweets returns global timeline of tweets', function () {
+    return service.getAPITweets().then((res) => {
       assert.equal(res.statusCode, 200);
       assert.equal(res.json.length, tweets.length);
 
@@ -46,18 +50,18 @@ suite('Tweet API tests', function () {
       for (let i = 0; i < tweets.length; i++) {
         assert.deepEqual(res.json[i], tweets[i]);
       }
-    })
-  );
+    });
+  });
 
-  test('get tweet by id returns correct tweet details', () =>
-    service.getAPITweet(tweets[0]._id).then((res) => {
+  test('get tweet by id returns correct tweet details', function () {
+    return service.getAPITweet(tweets[0]._id).then((res) => {
       assert.equal(res.statusCode, 200);
       assert.deepEqual(res.json, tweets[0]);
-    })
-  );
+    });
+  });
 
-  test('get tweets by user returns users timeline of tweets', () =>
-    service.getAPITweetsByUser(users[0]._id).then((res) => {
+  test('get tweets by user returns users timeline of tweets', function () {
+    return service.getAPITweetsByUser(users[0]._id).then((res) => {
       const tweetsByUser = tweets.filter(tweet => tweet.creator._id === users[0]._id);
 
       assert.equal(res.statusCode, 200);
@@ -67,51 +71,51 @@ suite('Tweet API tests', function () {
       for (let i = 0; i < tweetsByUser.length; i++) {
         assert.deepEqual(res.json[i], tweetsByUser[i]);
       }
-    })
-  );
+    });
+  });
 
-  test('get tweet by invalid id returns not found', () =>
-    service.getAPITweet('abc').then((res) => {
+  test('get tweet by invalid id returns not found', function () {
+    return service.getAPITweet('abc').then((res) => {
       assert.equal(res.statusCode, 404);
       return service.getAPITweet('a'.repeat(24));
     }).then((res) => {
       assert.equal(res.statusCode, 404);
-    })
-  );
+    });
+  });
 
-  test('delete existing tweet by id', () =>
-    service.deleteAPITweet(tweets[0]._id).then((res) => {
+  test('delete existing tweet by id', function () {
+    return service.deleteAPITweet(tweets[0]._id).then((res) => {
       assert.equal(res.statusCode, 204);
       assert.isNull(res.json);
 
       return service.getDBTweet(tweets[0]._id);
     }).then((tweet) => {
       assert.isNull(tweet);
-    })
-  );
+    });
+  });
 
-  test('try deleteing tweet of other user by id', () =>
-      service.deleteAPITweet(tweets[1]._id).then((res) => {
-        assert.equal(res.statusCode, 403);
+  test('try deleteing tweet of other user by id', function () {
+    return service.deleteAPITweet(tweets[1]._id).then((res) => {
+      assert.equal(res.statusCode, 403);
 
-        return service.getDBTweet(tweets[1]._id);
-      }).then((tweet) => {
-        assert.isNotNull(tweet);
-      })
-  );
+      return service.getDBTweet(tweets[1]._id);
+    }).then((tweet) => {
+      assert.isNotNull(tweet);
+    });
+  });
 
-  test('try deleting not existing tweet by id', () =>
-    service.deleteAPITweet(tweets[0]).then((res) => {
+  test('try deleting not existing tweet by id', function () {
+    return service.deleteAPITweet(tweets[0]).then((res) => {
       assert.equal(res.statusCode, 404);
 
       return service.getDBTweets();
     }).then((dbTweets) => {
       // Nothing should be deleted
       assert.equal(dbTweets.length, tweets.length);
-    })
-  );
+    });
+  });
 
-  test('create tweet with valid parameters (no image)', () => {
+  test('create tweet with valid parameters (no image)', function () {
     let createdTweet;
 
     return service.createAPITweet(fixtures.new_tweet).then((res) => {
@@ -147,18 +151,18 @@ suite('Tweet API tests', function () {
     });
   });
 
-  test('try to create tweet without parameters', () =>
-    service.createAPITweet({}).then((res) => {
+  test('try to create tweet without parameters', function () {
+    return service.createAPITweet({}).then((res) => {
       assert.equal(res.statusCode, 400);
 
       return service.getDBTweets();
     }).then((dbTweet) => {
       // Nothing should be created
       assert.equal(dbTweet.length, tweets.length);
-    })
-  );
+    });
+  });
 
-  test('parrot valid tweet that is not already parroted', () => {
+  test('parrot valid tweet that is not already parroted', function () {
     let tweet;
 
     return service.parrotAPITweet(tweets[0]._id, true).then((res) => {
@@ -174,7 +178,7 @@ suite('Tweet API tests', function () {
     });
   });
 
-  test('parrot valid tweet that is already parroted', () => {
+  test('parrot valid tweet that is already parroted', function () {
     let tweet;
 
     return service.parrotAPITweet(tweets[2]._id, true).then((res) => {
@@ -190,7 +194,7 @@ suite('Tweet API tests', function () {
     });
   });
 
-  test('unparrot tweet that is already parroted', () => {
+  test('unparrot tweet that is already parroted', function () {
     let tweet;
 
     return service.parrotAPITweet(tweets[2]._id, false).then((res) => {
@@ -206,7 +210,7 @@ suite('Tweet API tests', function () {
     });
   });
 
-  test('unparrot tweet that is not parroted', () => {
+  test('unparrot tweet that is not parroted', function () {
     let tweet;
 
     return service.parrotAPITweet(tweets[0]._id, false).then((res) => {
@@ -222,13 +226,13 @@ suite('Tweet API tests', function () {
     });
   });
 
-  test('parrot non existing tweet', () =>
-    service.parrotAPITweet('abcd', true).then((res) => {
+  test('parrot non existing tweet', function () {
+    return service.parrotAPITweet('abcd', true).then((res) => {
       assert.equal(res.statusCode, 404);
 
       return service.parrotAPITweet('a'.repeat(24));
     }).then((res) => {
       assert.equal(res.statusCode, 404);
-    })
-  );
+    });
+  });
 });

@@ -13,12 +13,13 @@ suite('Admin API tests', function () {
   let tweets;
 
   // Reset all data (and fixtures), so we can create each test fully isolated.
-  suiteSetup(() => {
+  suiteSetup(function () {
     service = new TwitterService();
     return service.start();
   });
-  setup(() =>
-    service.resetDB().then(dbData => {
+
+  setup(function () {
+    return service.resetDB().then(dbData => {
       users = dbData.users;
       tweets = dbData.tweets;
 
@@ -26,11 +27,14 @@ suite('Admin API tests', function () {
       service.loginAPI(users[1]);
 
       fixtures = require('./data/fixtures.json');
-    })
-  );
-  suiteTeardown(() => service.stop());
+    });
+  });
 
-  test('delete two tweets as admin', () => {
+  suiteTeardown(function () {
+    return service.stop();
+  });
+
+  test('delete two tweets as admin', function () {
     const tweetsToDelete = [
       tweets[0]._id,
       tweets[1]._id,

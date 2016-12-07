@@ -12,22 +12,26 @@ suite('User API tests', function () {
   let users;
 
   // Reset all data (and fixtures), so we can create each test fully isolated.
-  suiteSetup(() => {
+  suiteSetup(function () {
     service = new TwitterService();
     return service.start();
   });
-  setup(() =>
-    service.resetDB().then(dbData => {
+
+  setup(function () {
+    return service.resetDB().then(dbData => {
       users = dbData.users;
 
       service.loginAPI(users[0]);
 
       fixtures = require('./data/fixtures.json');
-    })
-  );
-  suiteTeardown(() => service.stop());
+    });
+  });
 
-  test('authenticate', () => {
+  suiteTeardown(function () {
+    return service.stop();
+  });
+
+  test('authenticate', function () {
     service.logoutAPI();
 
     return service.authenticateAPIUser(users[0]).then((res) => {
@@ -46,8 +50,8 @@ suite('User API tests', function () {
     });
   });
 
-  test('get users returns database users', () =>
-    service.getAPIUsers().then((res) => {
+  test('get users returns database users', function () {
+    return service.getAPIUsers().then((res) => {
       assert.equal(res.statusCode, 200);
       assert.equal(res.json.length, users.length);
 
@@ -55,62 +59,62 @@ suite('User API tests', function () {
         delete users[i].password; // Server should never send out passwords
         assert.deepEqual(res.json[i], users[i]);
       }
-    })
-  );
+    });
+  });
 
-  test('get user by id returns correct user details', () =>
-    service.getAPIUser(users[0]._id).then((res) => {
+  test('get user by id returns correct user details', function () {
+    return service.getAPIUser(users[0]._id).then((res) => {
       assert.equal(res.statusCode, 200);
 
       delete users[0].password;
       assert.deepEqual(res.json, users[0]);
-    })
-  );
+    });
+  });
 
-  test('get user by invalid id returns not found', () =>
-    service.getAPIUser('abc').then((res) => {
+  test('get user by invalid id returns not found', function () {
+    return service.getAPIUser('abc').then((res) => {
       assert.equal(res.statusCode, 404);
       return service.getAPIUser('a'.repeat(24));
     }).then((res) => {
       assert.equal(res.statusCode, 404);
-    })
-  );
+    });
+  });
 
-  test('delete existing user by id', () =>
-    service.deleteAPIUser(users[0]._id).then((res) => {
+  test('delete existing user by id', function () {
+    return service.deleteAPIUser(users[0]._id).then((res) => {
       assert.equal(res.statusCode, 204);
       assert.isNull(res.json);
 
       return service.getDBUser(users[0]._id);
     }).then((user) => {
       assert.isNull(user);
-    })
-  );
+    });
+  });
 
-  test('try deleting other user by id should fail', () =>
+  test('try deleting other user by id should fail', function () {
     // We are logged in as users[0]
-    service.deleteAPIUser(users[1]._id).then((res) => {
+    return service.deleteAPIUser(users[1]._id).then((res) => {
       assert.equal(res.statusCode, 403);
 
       return service.getDBUsers();
     }).then((dbUsers) => {
       // Nothing should be deleted
       assert.equal(dbUsers.length, users.length);
-    })
-  );
+    });
+  });
 
-  test('try deleting not existing user by id', () =>
-    service.deleteAPIUser(users[0]).then((res) => {
+  test('try deleting not existing user by id', function () {
+    return service.deleteAPIUser(users[0]).then((res) => {
       assert.equal(res.statusCode, 403);
 
       return service.getDBUsers();
     }).then((dbUsers) => {
       // Nothing should be deleted
       assert.equal(dbUsers.length, users.length);
-    })
-  );
+    });
+  });
 
-  test('create user with valid parameters', () => {
+  test('create user with valid parameters', function () {
     let createdUser;
 
     return service.createAPIUser(fixtures.new_user).then((res) => {
@@ -134,18 +138,18 @@ suite('User API tests', function () {
     });
   });
 
-  test('try to create user without parameters', () =>
-    service.createAPIUser({}).then((res) => {
+  test('try to create user without parameters', function () {
+    return service.createAPIUser({}).then((res) => {
       assert.equal(res.statusCode, 400);
 
       return service.getDBUsers();
     }).then((dbUsers) => {
       // Nothing should be created
       assert.equal(dbUsers.length, users.length);
-    })
-  );
+    });
+  });
 
-  test('update user with valid parameters', () => {
+  test('update user with valid parameters', function () {
     const updates = { firstName: 'New', lastName: 'Name' };
     const updatedUser = _.merge(users[0], updates);
     delete updatedUser.updatedAt;
@@ -163,7 +167,7 @@ suite('User API tests', function () {
     });
   });
 
-  test('try to update user with invalid parameters', () => {
+  test('try to update user with invalid parameters', function () {
     const updates = { firstName: '', lastName: 'Name' };
 
     return service.updateAPIUser(users[0]._id, updates).then((res) => {
@@ -176,7 +180,7 @@ suite('User API tests', function () {
     });
   });
 
-  test('try to update other users settings', () => {
+  test('try to update other users settings', function () {
     const updates = { firstName: 'New', lastName: 'Name' };
 
     return service.updateAPIUser(users[1]._id, updates).then((res) => {

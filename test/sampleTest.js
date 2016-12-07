@@ -14,7 +14,7 @@ suite('Sample tests', function () {
   setup(() => service.resetDB());
   suiteTeardown(() => service.stop());
 
-  test('sample api endpoint responds with 200 and data', () => {
+  test('sample api endpoint responds with 200 and data', function () {
     const expectedResult = { key: 'value' };
 
     return service.getAPISample().then((res) => {
