@@ -113,7 +113,7 @@ suite('Admin API tests', function () {
     return service.getAPIAdminStats().then((res) => {
       assert.equal(res.statusCode, 200);
 
-      assert.equal(res.json.tweecCount, tweets.length);
+      assert.equal(res.json.tweetCount, tweets.length);
       assert.equal(res.json.userCount, users.length);
     });
   });

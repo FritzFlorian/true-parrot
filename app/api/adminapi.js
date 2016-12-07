@@ -57,6 +57,19 @@ exports.stats = {
   },
 
   handler: function (request, reply) {
+    let tweetCount;
 
+    Tweet.count({}).then((dbTweetCount) => {
+      tweetCount = dbTweetCount;
+
+      return User.count({});
+    }).then((dbUserCount) => {
+      reply({
+        tweetCount: tweetCount,
+        userCount: dbUserCount,
+      });
+    }).catch((error) => {
+      reply(Boom.badImplementation('error calculating stats'));
+    });
   },
 };
