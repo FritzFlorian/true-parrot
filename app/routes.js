@@ -31,6 +31,8 @@ module.exports = [
   { method: 'POST', path: '/admin/users/delete', config: Admin.deleteMultipleUsers },
   { method: 'GET', path: '/admin/tweets', config: Admin.listTweets },
   { method: 'POST', path: '/admin/tweets/delete', config: Admin.deleteMultipleTweets },
+  { method: 'POST', path: '/admin/users', config: Admin.createUser },
+  { method: 'GET', path: '/admin/users/create', config: Admin.createUserForm },
 
   {
     method: 'GET',

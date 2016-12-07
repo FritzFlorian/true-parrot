@@ -21,6 +21,14 @@ User.validationSchema = {
   password: Joi.string().min(6).max(26).required(),
   description: Joi.string().max(140).allow(''),
 };
+User.adminValidationSchema = {
+  firstName: Joi.string().min(1).max(26).required(),
+  lastName: Joi.string().min(1).max(26).required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).max(26).required(),
+  description: Joi.string().max(140).allow(''),
+  admin: Joi.boolean(),
+};
 User.updateApiValidationSchema = {
   firstName: Joi.string().min(1).max(26),
   lastName: Joi.string().min(1).max(26),

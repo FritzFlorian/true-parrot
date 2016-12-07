@@ -166,3 +166,55 @@ exports.deleteMultipleTweets = {
     });
   },
 };
+
+exports.createUser = {
+  auth: {
+    scope: 'admin',
+  },
+  validate: {
+
+    payload: User.adminValidationSchema,
+
+    failAction: function (request, reply, source, error) {
+      delete request.payload.password;
+
+      reply.view('adminCreateUser', {
+        title: 'Error creating user',
+        errors: error.data.details,
+        user: request.payload,
+      }).code(400);
+    },
+
+    options: {
+      abortEarly: false,
+    },
+  },
+
+  handler: function (request, reply) {
+    if (request.payload.admin) {
+      request.payload.scope = ['admin'];
+    }
+
+    delete request.payload.admin;
+
+    const user = new User(request.payload);
+
+    user.save().then(newUser => {
+      request.yar.flash('info', ['Successfully Created User.'], true);
+      reply.redirect('/admin/users');
+    }).catch(err => {
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+      reply.redirect('/admin/users/create');
+    });
+  },
+};
+
+exports.createUserForm = {
+  auth: {
+    scope: 'admin',
+  },
+  handler: function (request, reply) {
+    reply.view('adminCreateUser', { title: 'Create User', user: {} });
+  },
+
+};
