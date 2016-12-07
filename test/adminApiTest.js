@@ -4,6 +4,7 @@ const TwitterService = require('./twitterService');
 const assert = require('chai').assert;
 const _ = require('lodash');
 const User = require('../app/models/user');
+const Tweet = require('../app/models/tweet');
 const utils = require('../app/api/utils');
 
 suite('Admin API tests', function () {
@@ -82,8 +83,8 @@ suite('Admin API tests', function () {
 
   test('delete two users as admin', function () {
     const usersToDelete = [
-      tweets[0]._id,
-      tweets[1]._id,
+      users[0]._id,
+      users[1]._id,
     ];
 
     return service.deleteMultipleAPIUsers(usersToDelete).then((res) => {
