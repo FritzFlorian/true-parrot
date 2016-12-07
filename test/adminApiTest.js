@@ -42,7 +42,7 @@ suite('Admin API tests', function () {
     ];
 
     return service.deleteMultipleAPITweets(tweetsToDelete).then((res) => {
-      assert.equal(res.statusCode, 204);
+      assert.equal(res.statusCode, 200);
 
       return Tweet.find({});
     }).then((dbTweets) => {
@@ -55,7 +55,7 @@ suite('Admin API tests', function () {
     ];
 
     return service.deleteMultipleAPITweets(tweetsToDelete).then((res) => {
-      assert.equal(res.statusCode, 204);
+      assert.equal(res.statusCode, 200);
 
       return Tweet.find({});
     }).then((dbTweets) => {
@@ -88,7 +88,7 @@ suite('Admin API tests', function () {
     ];
 
     return service.deleteMultipleAPIUsers(usersToDelete).then((res) => {
-      assert.equal(res.statusCode, 204);
+      assert.equal(res.statusCode, 200);
 
       return User.find({});
     }).then((dbUsers) => {
@@ -101,7 +101,7 @@ suite('Admin API tests', function () {
     ];
 
     return service.deleteMultipleAPIUsers(usersToDelete).then((res) => {
-      assert.equal(res.statusCode, 204);
+      assert.equal(res.statusCode, 200);
 
       return User.find({});
     }).then((dbUsers) => {

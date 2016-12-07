@@ -19,7 +19,7 @@ exports.deleteMultipleTweets = {
     Tweet.remove({ _id: { $in: tweetsToDelete } }).then((tweets) => {
       const message = 'Deleted ' + tweets.result.n + ' tweets.';
 
-      reply({ success: true, message: message }).code(204);
+      reply({ success: true, message: message });
     }).catch((error) => {
       reply(Boom.badImplementation('error deleting tweets'));
     });
@@ -43,7 +43,7 @@ exports.deleteMultipleUsers = {
       const message = 'Deleted ' + usersDeleted + ' users and ' +
           tweets.result.n + ' related tweets.';
 
-      reply({ success: true, message: message }).code(204);
+      reply({ success: true, message: message });
     }).catch((error) => {
       reply(Boom.badImplementation('error deleting users'));
     });
