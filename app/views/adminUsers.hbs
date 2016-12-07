@@ -12,6 +12,9 @@
             <th>
               <button class="ui negative button" type="submit">Delete Selected</button>
             </th>
+            <th>
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -27,6 +30,9 @@
                     <input type="checkbox" class="hidden" value="{{_id}}" name="selectedUsers[]">
                   </div>
                 </div>
+              </td>
+              <td>
+                <a class="ui button" href="/users/{{_id}}">View Profile</a>
               </td>
             </tr>
           {{/each}}
