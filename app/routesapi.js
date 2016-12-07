@@ -24,4 +24,5 @@ module.exports = [
 
   { method: 'POST', path: '/api/admin/tweets/batchDelete', config: AdminApi.deleteMultipleTweets },
   { method: 'POST', path: '/api/admin/users/batchDelete', config: AdminApi.deleteMultipleUsers },
+  { method: 'GET', path: '/api/admin/stats', config: AdminApi.stats },
 ];

@@ -159,6 +159,10 @@ class TwitterService {
     return this.requestService.post('/api/admin/users/batchDelete', userIds);
   }
 
+  getAPIAdminStats() {
+    return this.requestService.get('/api/admin/stats');
+  }
+
   // Helpers
   seedResultToSimpleArrays(dbData) {
     const result = {};

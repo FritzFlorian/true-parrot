@@ -108,4 +108,13 @@ suite('Admin API tests', function () {
       assert.equal(dbUsers.length, users.length);
     });
   });
+
+  test('read stats as admin', function () {
+    return service.getAPIAdminStats().then((res) => {
+      assert.equal(res.statusCode, 200);
+
+      assert.equal(res.json.tweecCount, tweets.length);
+      assert.equal(res.json.userCount, users.length);
+    });
+  });
 });
