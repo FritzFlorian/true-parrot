@@ -128,13 +128,17 @@ class TwitterService {
     return this.requestService.delete(`/api/tweets/${id}`);
   }
 
+  deleteAPITweetsByUser(id) {
+    return this.requestService.delete(`/api/users/${id}/tweets`);
+  }
+
   parrotAPITweet(id, parroting) {
     return this.requestService.patch(`/api/tweets/${id}/parrot`, { parroting: parroting });
   }
 
   // Tweet DB
-  getDBTweets() {
-    return Tweet.find({}).then(tweets => JSON.parse(JSON.stringify(tweets)));
+  getDBTweets(findParams = {}) {
+    return Tweet.find(findParams).then(tweets => JSON.parse(JSON.stringify(tweets)));
   }
 
   getDBTweet(id) {

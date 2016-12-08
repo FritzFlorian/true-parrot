@@ -94,6 +94,26 @@ suite('Tweet API tests', function () {
     });
   });
 
+  test('delete all own tweets', function () {
+    return service.deleteAPITweetsByUser(users[0]._id).then((res) => {
+      assert.equal(res.statusCode, 200);
+
+      return service.getDBTweets({ creator: users[0]._id });
+    }).then((tweets) => {
+      assert.equal(tweets.length, 0);
+    });
+  });
+
+  test('try to delete all tweets by other user', function () {
+    return service.deleteAPITweetsByUser(users[1]._id).then((res) => {
+      assert.equal(res.statusCode, 403);
+
+      return service.getDBTweets({ creator: users[1]._id });
+    }).then((tweets) => {
+      assert.notEqual(tweets.length, 0);
+    });
+  });
+
   test('try deleteing tweet of other user by id', function () {
     return service.deleteAPITweet(tweets[1]._id).then((res) => {
       assert.equal(res.statusCode, 403);

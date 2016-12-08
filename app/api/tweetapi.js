@@ -163,6 +163,16 @@ exports.deleteOne = {
   },
 };
 
+exports.deleteAllByUser = {
+  auth: {
+    strategy: 'jwt',
+  },
+
+  handler: function (request, reply) {
+
+  },
+};
+
 exports.parrotOne = {
   auth: {
     strategy: 'jwt',
