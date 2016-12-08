@@ -2,6 +2,7 @@
 
 const Boom = require('boom');
 const User = require('../models/user');
+const Tweet = require('../models/tweet');
 
 const utils = require('./utils.js');
 const _ = require('lodash');
@@ -17,7 +18,7 @@ exports.authenticate = {
 
         reply({ success: true, token: token, user: foundUser }).code(200);
       } else {
-        reply({ success: false, message: 'Authentication failed. User not found.' }).code(400);
+        reply({ success: false, message: 'Authentication failed.' }).code(400);
       }
     }).catch(err => {
       reply(Boom.notFound('internal db failure'));
@@ -134,10 +135,12 @@ exports.deleteOne = {
     const userInfo = request.auth.credentials;
 
     if (userInfo.id == request.params.id || _.includes(userInfo.scope, 'admin')) {
-      User.remove({ _id: request.params.id }).then((user) => {
+      Tweet.remove({ creator: request.params.id }).then(tweets =>
+          User.remove({ _id: request.params.id })
+      ).then((user) => {
         reply().code(204);
       }).catch((error) => {
-        reply(Boom.notFound('id not found'));
+        reply(Boom.notFound('database error'));
       });
     } else {
       reply(Boom.forbidden('insufficient permissions'));
