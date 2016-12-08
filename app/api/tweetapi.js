@@ -169,9 +169,24 @@ exports.deleteAllByUser = {
   },
 
   handler: function (request, reply) {
+    const userInfo = request.auth.credentials;
 
+    if (request.params.id == userInfo.id || hasAdminScope(userInfo.scope)) {
+      Tweet.remove({ creator: request.params.id }).then((result) => {
+        reply({
+          success: true,
+          message: 'Deleted ' + result.result.n + ' tweets.',
+        });
+      });
+    } else {
+      reply(Boom.forbidden('insufficient permissions'));
+    }
   },
 };
+
+function hasAdminScope(scope) {
+  return _.includes(scope, 'admin');
+}
 
 exports.parrotOne = {
   auth: {
