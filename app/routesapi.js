@@ -16,6 +16,7 @@ module.exports = [
   { method: 'POST', path: '/api/users/authenticate', config: UsersApi.authenticate },
 
   { method: 'GET', path: '/api/tweets', config: TweetsApi.findAll },
+  { method: 'GET', path: '/api/following/tweets', config: TweetsApi.findAllOfFollowers },
   { method: 'GET', path: '/api/tweets/{id}', config: TweetsApi.findOne },
   { method: 'GET', path: '/api/users/{id}/tweets', config: TweetsApi.findAllByUser },
   { method: 'DELETE', path: '/api/users/{id}/tweets', config: TweetsApi.deleteAllByUser },

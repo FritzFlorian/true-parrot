@@ -32,6 +32,35 @@ exports.findAll = {
   },
 };
 
+exports.findAllOfFollowers = {
+  auth: {
+    strategy: 'jwt',
+  },
+
+  handler: function (request, reply) {
+    const userInfo = request.auth.credentials;
+    let following;
+
+    User.findOne({ _id: userInfo.id }).then((user) => {
+      const following = user.following;
+
+      return Tweet.find({ creator: { $in: following } })
+              .sort({ createdAt: 'desc' })
+              .limit(50)
+              .populate('creator')
+              .exec();
+    }).then((tweets) => {
+      tweets.map((tweet) => {
+        delete tweet.creator._doc.password;
+        return tweet;
+      });
+      reply(tweets);
+    }).catch((error) => {
+      reply(Boom.badImplementation('error accessing db'));
+    });
+  },
+};
+
 exports.findAllByUser = {
   auth: false,
 

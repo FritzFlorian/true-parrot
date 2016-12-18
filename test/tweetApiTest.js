@@ -54,12 +54,15 @@ suite('Tweet API tests', function () {
   });
 
   test('get social graph returns tweets of followed users', function () {
+    // Login Bart, hes the only one with followers (avoid seeding issues)
+    service.logoutAPI();
+    service.loginAPI(users[2]);
+
     return service.getAPISocialGraph().then((res) => {
       assert.equal(res.statusCode, 200);
 
-      // Homer follows all other users.
-      // Filter out his own tweets, these should not appear in the list.
-      tweets = tweets.filter(tweet => tweet.creator.firstName != 'Homer');
+      // Bart follows homer, filter out all other tweets.
+      tweets = tweets.filter(tweet => tweet.creator.firstName == 'Homer');
 
       assert.equal(res.json.length, tweets.length);
 
