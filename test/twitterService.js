@@ -102,6 +102,10 @@ class TwitterService {
     return this.requestService.get('/api/tweets');
   }
 
+  getAPISocialGraph() {
+    return this.requestService.get('/api/social/tweets');
+  }
+
   getAPITweetsByUser(id) {
     return this.requestService.get(`/api/users/${id}/tweets`);
   }

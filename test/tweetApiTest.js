@@ -53,6 +53,23 @@ suite('Tweet API tests', function () {
     });
   });
 
+  test('get social graph returns tweets of followed users', function () {
+    return service.getAPISocialGraph().then((res) => {
+      assert.equal(res.statusCode, 200);
+
+      // Homer follows all other users.
+      // Filter out his own tweets, these should not appear in the list.
+      tweets = tweets.filter(tweet => tweet.creator.firstName != 'Homer');
+
+      assert.equal(res.json.length, tweets.length);
+
+      // Fixtures are already sorted by date, so we also test the order
+      for (let i = 0; i < tweets.length; i++) {
+        assert.deepEqual(res.json[i], tweets[i]);
+      }
+    });
+  });
+
   test('get tweet by id returns correct tweet details', function () {
     return service.getAPITweet(tweets[0]._id).then((res) => {
       assert.equal(res.statusCode, 200);
