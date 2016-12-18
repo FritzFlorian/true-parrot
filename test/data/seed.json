@@ -7,8 +7,6 @@
       "email": "homer@simpson.com",
       "password": "secret",
       "following": [
-        "->users.marge",
-        "->users.bart"
       ]
     },
     "marge": {
@@ -17,8 +15,7 @@
       "email": "marge@simpson.com",
       "password": "secret",
       "scope": ["admin"],
-      "followers": [
-        "->users.homer"
+      "following": [
       ]
     },
     "bart": {
@@ -26,7 +23,7 @@
       "lastName": "Simpson",
       "email": "bart@simpson.com",
       "password": "secret",
-      "followers": [
+      "following": [
         "->users.homer"
       ]
     }

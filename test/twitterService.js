@@ -103,7 +103,7 @@ class TwitterService {
   }
 
   getAPISocialGraph() {
-    return this.requestService.get('/api/social/tweets');
+    return this.requestService.get('/api/following/tweets');
   }
 
   getAPITweetsByUser(id) {
