@@ -66,7 +66,10 @@ suite('User API tests', function () {
     return service.getAPIUser(users[0]._id).then((res) => {
       assert.equal(res.statusCode, 200);
 
+      // Adjust output of correct user
       delete users[0].password;
+      users[0].followers = [users[2]._id];
+
       assert.deepEqual(res.json, users[0]);
     });
   });
