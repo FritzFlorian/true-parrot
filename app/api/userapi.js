@@ -154,3 +154,14 @@ exports.deleteOne = {
     }
   },
 };
+
+exports.followOne = {
+  auth: {
+    strategy: 'jwt',
+  },
+
+  handler: function (request, reply) {
+
+  },
+};
+

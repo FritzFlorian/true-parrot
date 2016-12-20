@@ -195,4 +195,41 @@ suite('User API tests', function () {
       assert.deepEqual(dbUser, users[1]);
     });
   });
+
+  test('follow user that is not already followed', function () {
+    return service.followAPIUser(users[1]._id, true).then((res) => {
+      assert.equal(res.statusCode, 204);
+
+      return service.getDBUser(users[0]._id);
+    }).then((dbUser) => {
+      // The current user should be following now
+      assert.isTrue(_.includes(dbUser.following, users[1]._id));
+    });
+  });
+
+  test('try to follow not existing user', function () {
+    return service.followAPIUser('a'.repeat(24), true).then((res) => {
+      assert.equal(res.statusCode, 400);
+
+      return service.getDBUser(users[0]._id);
+    }).then((dbUser) => {
+      // Nothing should be changed
+      assert.equal(dbUser.following.length, users[0].following.length);
+    });
+  });
+
+  test('un follow user that is currently followed', function () {
+    // Login as Bart
+    service.logoutAPI();
+    service.loginAPI(users[2]);
+
+    return service.followAPIUser(users[0]._id, true).then((res) => {
+      assert.equal(res.statusCode, 204);
+
+      return service.getDBUser(users[2]._id);
+    }).then((dbUser) => {
+      // The current user should be not following anymore
+      assert.isFalse(_.includes(dbUser.following, users[0]._id));
+    });
+  });
 });

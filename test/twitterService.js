@@ -79,6 +79,10 @@ class TwitterService {
     return this.requestService.patch(`/api/users/${id}`, params);
   }
 
+  followAPIUser(id, following) {
+    return this.requestService.patch(`/api/users/${id}/follow`, { following: following });
+  }
+
   // User DB
   getDBUsers() {
     return User.find({}).then(users => JSON.parse(JSON.stringify(users)));
