@@ -16,8 +16,8 @@
     {{#if tweetCount}}
       <p>Has {{tweetCount}} tweets.</p>
     {{/if}}
-    <p>Follows {{ user.following.length }} Users.</p>
-    <p>Has {{ user.followers.length }} Followers.</p>
+    <a href="/users/{{ user._id }}/following"><p>Follows {{ user.following.length }} Users.</p></a>
+    <a href="/users/{{ user._id }}/followers"><p>Has {{ user.followers.length }} Followers.</p></a>
   </div>
 
   {{#canFollow user}}

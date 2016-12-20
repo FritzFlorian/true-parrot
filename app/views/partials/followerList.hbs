@@ -1,0 +1,7 @@
+<div class="masonry-grid">
+  {{#each followers}}
+    <div class="masonry-grid-item">
+      {{> userCard user=this tweetCount=false}}
+    </div>
+  {{/each}}
+</div>

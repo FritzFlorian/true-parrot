@@ -242,6 +242,86 @@ exports.profile = {
   },
 };
 
+exports.followers = {
+  auth: {
+    mode: 'try',
+    strategy: 'session',
+  },
+  plugins: {
+    'hapi-auth-cookie': {
+      redirectTo: false,
+    },
+  },
+  handler: function (request, reply) {
+    let user;
+
+    User.findOne({ _id: request.params.id }).populate('followers').then((foundUser) => {
+      if (foundUser) {
+        delete foundUser.password;
+        for (let i = 0; i < foundUser.followers.length; i++) {
+          delete foundUser.followers[i].password;
+        }
+
+        user = foundUser;
+
+        return Tweet.count({ creator: user._id });
+      } else {
+        return null;
+      }
+    }).then((tweetCount) => {
+      if (user) {
+        reply.view('followers', { user: user, tweetCount: tweetCount });
+      } else {
+        request.yar.flash('info', ['Could not find this user.'], true);
+        reply.redirect('/tweets');
+      }
+    }).catch((error) => {
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+      reply.redirect('/tweets');
+    });
+  },
+};
+
+exports.following = {
+  auth: {
+    mode: 'try',
+    strategy: 'session',
+  },
+  plugins: {
+    'hapi-auth-cookie': {
+      redirectTo: false,
+    },
+  },
+  handler: function (request, reply) {
+    let user;
+
+    User.findOne({ _id: request.params.id }).populate('following').then((foundUser) => {
+      if (foundUser) {
+        delete foundUser.password;
+        for (let i = 0; i < foundUser.following.length; i++) {
+          delete foundUser.following[i].password;
+        }
+
+        user = foundUser;
+
+        return Tweet.count({ creator: user._id });
+      } else {
+        return null;
+      }
+    }).then((tweetCount) => {
+      if (user) {
+        reply.view('following', { user: user, tweetCount: tweetCount });
+      } else {
+        request.yar.flash('info', ['Could not find this user.'], true);
+        reply.redirect('/tweets');
+      }
+    }).catch((error) => {
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+      reply.redirect('/tweets');
+    });
+  },
+};
+
 exports.follow = {
   handler: function (request, reply) {
     const currentUserId = request.auth.credentials.loggedInUserId;
