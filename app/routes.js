@@ -24,6 +24,7 @@ module.exports = [
   { method: 'GET', path: '/users/{id}/following', config: User.following },
 
   { method: 'GET', path: '/tweets', config: Tweet.showAll },
+  { method: 'GET', path: '/tweets/following', config: Tweet.showAllOfFollowed },
   { method: 'GET', path: '/tweet', config: Tweet.form },
   { method: 'POST', path: '/tweets', config: Tweet.create },
   { method: 'POST', path: '/tweets/{id}/delete', config: Tweet.deleteOne },
