@@ -19,6 +19,7 @@ You need to set the environment variable `NODE_ENV` to `test` to run the test.
 To run code coverage use `npm run coverage`.
 
 The coverage rate is low as there are only tests for the api, not the static html pages.
+The result of the coverage can be viewed in `coverage/lcov-report/index.html`.
 
 ## Attribution
 
