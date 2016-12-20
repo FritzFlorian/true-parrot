@@ -20,6 +20,20 @@
     <p>Has {{ user.followers.length }} Followers.</p>
   </div>
 
+  {{#canFollow user}}
+    <div class="extra content">
+      <form action="/users/{{ user._id}}/follow" method="POST">
+        <button class="blue ui button" type="submit">Follow User</button>
+      </form>
+    </div>
+  {{/canFollow}}
+  {{#canUnfollow user}}
+    <div class="extra content">
+      <form action="/users/{{ user._id}}/unfollow" method="POST">
+        <button class="ui button" type="submit">Stop Following User</button>
+      </form>
+    </div>
+  {{/canUnfollow}}
   {{#isAdmin}}
     <div class="extra content">
       <form action="/admin/users/{{ user._id}}/delete" method="POST">
