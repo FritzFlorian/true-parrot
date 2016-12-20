@@ -48,11 +48,18 @@ exports.findOne = {
   auth: false,
 
   handler: function (request, reply) {
-    User.findOne({ _id: request.params.id }).then((user) => {
+    let followers;
+
+    User.find({ following: request.params.id }).then((users) => {
+      followers = users.map(user => user._id);
+
+      return User.findOne({ _id: request.params.id });
+    }).then((user) => {
       if (user == null) {
         reply(Boom.notFound('id not found'));
       } else {
         delete user._doc.password;
+        user._doc.followers = followers;
         reply(user);
       }
     }).catch((error) => {
