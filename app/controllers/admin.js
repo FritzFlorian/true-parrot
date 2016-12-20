@@ -82,8 +82,10 @@ exports.deleteSingleUser = {
   },
 
   handler: function (request, reply) {
-    User
-    .remove({ _id: request.params.id })
+    User.update({},
+        { $pull: { following: request.params.id, followers: request.params.id } },
+        { multi: true })
+    .then(res => User.remove({ _id: request.params.id }))
     .then(user => Tweet.remove({ creator: request.params.id }))
     .then((tweets) => {
       request.yar.flash('info', ['Deleted user.'], true);
@@ -118,10 +120,15 @@ exports.deleteMultipleUsers = {
     const usersToDelete = request.payload['selectedUsers[]'];
     let usersDeleted;
 
-    User.remove({ _id: { $in: usersToDelete } }).then((users) => {
+    User.update({},
+        { $pull: { following: { $in: usersToDelete }, followers: { $in: usersToDelete } } },
+        { multi: true })
+    .then(res => User.remove({ _id: { $in: usersToDelete } }))
+    .then((users) => {
       usersDeleted = users.result.n;
       return Tweet.remove({ creator: { $in: usersToDelete } });
-    }).then((tweets) => {
+    })
+    .then((tweets) => {
       const message = 'Deleted ' + usersDeleted + ' users and ' +
                           tweets.result.n + ' related tweets.';
 
