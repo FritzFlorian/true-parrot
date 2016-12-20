@@ -236,4 +236,30 @@ suite('User API tests', function () {
       assert.isFalse(_.includes(dbUser.following, users[0]._id));
     });
   });
+
+  test('deleting user should remove him from all following lists', function () {
+    return service.deleteAPIUser(users[0]._id, true).then((res) => {
+      assert.equal(res.statusCode, 204);
+
+      return service.getDBUser(users[2]._id);
+    }).then((dbUser) => {
+      // The current user should be following now
+      assert.isFalse(_.includes(dbUser.following, users[0]._id));
+    });
+  });
+
+  test('deleting user should remove him from all follower lists', function () {
+    // We need an admin for this action
+    service.logoutAPI();
+    service.loginAPI(users[1]);
+
+    return service.deleteAPIUser(users[2]._id, true).then((res) => {
+      assert.equal(res.statusCode, 204);
+
+      return service.getDBUser(users[0]._id);
+    }).then((dbUser) => {
+      // The current user should be following now
+      assert.isFalse(_.includes(dbUser.followers, users[2]._id));
+    });
+  });
 });
