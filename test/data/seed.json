@@ -6,8 +6,8 @@
       "lastName": "Simpson",
       "email": "homer@simpson.com",
       "password": "secret",
-      "following": [
-      ]
+      "following": [],
+      "followers": []
     },
     "marge": {
       "firstName": "Marge",
@@ -15,17 +15,16 @@
       "email": "marge@simpson.com",
       "password": "secret",
       "scope": ["admin"],
-      "following": [
-      ]
+      "following": [],
+      "followers": []
     },
     "bart": {
       "firstName": "Bart",
       "lastName": "Simpson",
       "email": "bart@simpson.com",
       "password": "secret",
-      "following": [
-        "->users.homer"
-      ]
+      "following": [],
+      "followers": []
     }
   },
   "tweets": {

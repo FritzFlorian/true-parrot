@@ -50,16 +50,11 @@ exports.findOne = {
   handler: function (request, reply) {
     let followers;
 
-    User.find({ following: request.params.id }).then((users) => {
-      followers = users.map(user => user._id);
-
-      return User.findOne({ _id: request.params.id });
-    }).then((user) => {
+    User.findOne({ _id: request.params.id }).then((user) => {
       if (user == null) {
         reply(Boom.notFound('id not found'));
       } else {
         delete user._doc.password;
-        user._doc.followers = followers;
         reply(user);
       }
     }).catch((error) => {
@@ -161,39 +156,38 @@ exports.followOne = {
   },
 
   handler: function (request, reply) {
-    let alreadyFollowing = false;
-    let targetUser;
+    const userInfo = request.auth.credentials;
 
-    User.findOne({ _id: request.params.id }).then((user) => {
-      targetUser = user;
-
-      return User.findOne({ _id: request.auth.credentials.id });
-    }).then((user) => {
-      if (user && targetUser) {
-        // Delete existing following of user
-        let newFollowing = user.following.filter((currentId) => {
-          if (currentId.equals(request.params.id)) {
-            return false;
-          }
-
-          return true;
-        });
-
-        // Re-Add the parrot if the user patches to set parroting to true
-        if (request.payload.following) {
-          newFollowing.push(request.params.id);
-        }
-
-        user.following = newFollowing;
-        return user.save();
+    User.findOne({ _id: request.params.id }).then((targetUser) => {
+      if (targetUser) {
+        return true;
       } else {
-        throw 'id not found';
+        throw 'not found';
+      }
+    }).then((unused) => {
+      if (request.payload.following) {
+        return User.update({ _id: userInfo.id }, { $addToSet: { following: request.params.id } });
+      } else {
+        return User.update({ _id: userInfo.id }, { $pull: { following: request.params.id } });
+      }
+    }).then((unused) => {
+      if (request.payload.following) {
+        return User.findByIdAndUpdate({ _id: request.params.id },
+                                      { $addToSet: { followers: userInfo.id } },
+                                      { new: true });
+      } else {
+        return User.findByIdAndUpdate({ _id: request.params.id },
+                                      { $pull: { followers: userInfo.id } },
+                                      { new: true });
       }
     }).then((newUser) => {
-      reply().code(204);
+      delete newUser.password;
+
+      reply(newUser);
     }).catch((error) => {
-      reply(Boom.notFound('id not found'));
+      reply(Boom.notFound('user not found'));
     });
+
   },
 };
 

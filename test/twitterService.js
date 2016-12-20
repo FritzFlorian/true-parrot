@@ -26,10 +26,33 @@ class TwitterService {
   resetDB() {
     const seeder = require('mongoose-seeder');
     const seedData = require('./data/seed.json');
+    let data;
+    let dbData;
 
     // Insert consistent db contents for tests
     return seeder.seed(seedData, { dropDatabase: false, dropCollections: true })
-                  .then((dbData) => this.seedResultToSimpleArrays(dbData));
+                  .then((result) => {
+                    dbData = result;
+                    data = this.seedResultToSimpleArrays(result);
+
+                    // Start to seed followers/following.
+                    // Can not do that in the seeding stage, as its a circular dependency.
+                    return User.findByIdAndUpdate({ _id: data.users[2]._id },
+                                                  { $set: { following: [data.users[0]._id] } },
+                                                  { new: true });
+                  })
+                  .then((newUser) => {
+                    data.users[2] = JSON.parse(JSON.stringify(newUser));
+
+                    return User.findByIdAndUpdate({ _id: data.users[0]._id },
+                                                  { $set: { followers: [data.users[2]._id] } },
+                                                  { new: true });
+                  })
+                  .then((newUser) => {
+                    data.users[0] = JSON.parse(JSON.stringify(newUser));
+
+                    return data;
+                  });
   }
 
   stop() {

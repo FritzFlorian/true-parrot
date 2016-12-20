@@ -198,7 +198,9 @@ suite('User API tests', function () {
 
   test('follow user that is not already followed', function () {
     return service.followAPIUser(users[1]._id, true).then((res) => {
-      assert.equal(res.statusCode, 204);
+      assert.equal(res.statusCode, 200);
+
+      assert.isTrue(_.includes(res.json.followers, users[0]._id));
 
       return service.getDBUser(users[0]._id);
     }).then((dbUser) => {
@@ -224,7 +226,9 @@ suite('User API tests', function () {
     service.loginAPI(users[2]);
 
     return service.followAPIUser(users[0]._id, false).then((res) => {
-      assert.equal(res.statusCode, 204);
+      assert.equal(res.statusCode, 200);
+
+      assert.isFalse(_.includes(res.json.followers, users[2]._id));
 
       return service.getDBUser(users[2]._id);
     }).then((dbUser) => {
