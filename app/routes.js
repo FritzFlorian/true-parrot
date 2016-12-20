@@ -18,6 +18,8 @@ module.exports = [
   { method: 'POST', path: '/settings', config: User.updateSettings },
   { method: 'GET', path: '/users/{id}', config: User.profile },
   { method: 'POST', path: '/users/{id}/tweets/delete', config: Tweet.deleteAllByUser },
+  { method: 'POST', path: '/users/{id}/follow', config: User.follow },
+  { method: 'POST', path: '/users/{id}/unfollow', config: User.unfollow },
 
   { method: 'GET', path: '/tweets', config: Tweet.showAll },
   { method: 'GET', path: '/tweet', config: Tweet.form },

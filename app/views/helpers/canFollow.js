@@ -3,7 +3,9 @@
 const _ = require('lodash');
 
 const canFollow = function (user, context) {
-  if (_.includes(user.followers, context.data.root.userId)
+  const followerStrings = user.followers.map(user => JSON.parse(JSON.stringify(user)));
+
+  if (_.includes(followerStrings, context.data.root.userId)
         || context.data.root.userId == user._id) {
     return context.inverse(this);
   }

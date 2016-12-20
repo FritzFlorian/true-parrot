@@ -241,3 +241,55 @@ exports.profile = {
     });
   },
 };
+
+exports.follow = {
+  handler: function (request, reply) {
+    const currentUserId = request.auth.credentials.loggedInUserId;
+
+    User.findOne({ _id: request.params.id })
+    .then((user) => {
+      if (user && request.params.id != currentUserId) {
+        return User.update({ _id: currentUserId }, { $addToSet: { following: request.params.id } });
+      } else {
+        throw 'internal error';
+      }
+    })
+    .then(user =>  User.findByIdAndUpdate({ _id: request.params.id },
+                                          { $addToSet: { followers: currentUserId } },
+                                          { new: true }))
+    .then((user) => {
+      request.yar.flash('info', ['Following User.'], true);
+      reply.redirect('/users/' + request.params.id);
+    }).catch((error) => {
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+      reply.redirect('/tweets');
+    });
+  },
+};
+
+exports.unfollow = {
+  handler: function (request, reply) {
+    const currentUserId = request.auth.credentials.loggedInUserId;
+
+    User.findOne({ _id: request.params.id })
+    .then((user) => {
+      if (user && request.params.id != currentUserId) {
+        return User.update({ _id: currentUserId },
+                            { $pull: { following: request.params.id } },
+                            { multi: true });
+      } else {
+        throw 'internal error';
+      }
+    })
+    .then(user =>  User.findByIdAndUpdate({ _id: request.params.id },
+                                          { $pull: { followers: currentUserId } },
+                                          { new: true, multi: true }))
+    .then((user) => {
+      request.yar.flash('info', ['Stopped following User.'], true);
+      reply.redirect('/users/' + request.params.id);
+    }).catch((error) => {
+      request.yar.flash('info', ['An internal error occurred, please try again.'], true);
+      reply.redirect('/tweets');
+    });
+  },
+};
