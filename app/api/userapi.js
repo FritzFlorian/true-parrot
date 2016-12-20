@@ -137,9 +137,12 @@ exports.deleteOne = {
     const userInfo = request.auth.credentials;
 
     if (userInfo.id == request.params.id || _.includes(userInfo.scope, 'admin')) {
-      Tweet.remove({ creator: request.params.id }).then(tweets =>
-          User.remove({ _id: request.params.id })
-      ).then((user) => {
+      User.update({},
+                  { $pull: { following: request.params.id, followers: request.params.id } },
+                  { multi: true })
+      .then(res => Tweet.remove({ creator: request.params.id }))
+      .then(res => User.remove({ _id: request.params.id }))
+      .then((user) => {
         reply().code(204);
       }).catch((error) => {
         reply(Boom.notFound('database error'));
@@ -168,7 +171,9 @@ exports.followOne = {
       if (request.payload.following) {
         return User.update({ _id: userInfo.id }, { $addToSet: { following: request.params.id } });
       } else {
-        return User.update({ _id: userInfo.id }, { $pull: { following: request.params.id } });
+        return User.update({ _id: userInfo.id },
+                            { $pull: { following: request.params.id } },
+                            { multi: true });
       }
     }).then((unused) => {
       if (request.payload.following) {
@@ -178,7 +183,7 @@ exports.followOne = {
       } else {
         return User.findByIdAndUpdate({ _id: request.params.id },
                                       { $pull: { followers: userInfo.id } },
-                                      { new: true });
+                                      { new: true, multi: true });
       }
     }).then((newUser) => {
       delete newUser.password;
