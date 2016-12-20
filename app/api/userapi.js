@@ -161,7 +161,39 @@ exports.followOne = {
   },
 
   handler: function (request, reply) {
+    let alreadyFollowing = false;
+    let targetUser;
 
+    User.findOne({ _id: request.params.id }).then((user) => {
+      targetUser = user;
+
+      return User.findOne({ _id: request.auth.credentials.id });
+    }).then((user) => {
+      if (user && targetUser) {
+        // Delete existing following of user
+        let newFollowing = user.following.filter((currentId) => {
+          if (currentId.equals(request.params.id)) {
+            return false;
+          }
+
+          return true;
+        });
+
+        // Re-Add the parrot if the user patches to set parroting to true
+        if (request.payload.following) {
+          newFollowing.push(request.params.id);
+        }
+
+        user.following = newFollowing;
+        return user.save();
+      } else {
+        throw 'id not found';
+      }
+    }).then((newUser) => {
+      reply().code(204);
+    }).catch((error) => {
+      reply(Boom.notFound('id not found'));
+    });
   },
 };
 

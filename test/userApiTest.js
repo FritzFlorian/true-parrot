@@ -209,7 +209,7 @@ suite('User API tests', function () {
 
   test('try to follow not existing user', function () {
     return service.followAPIUser('a'.repeat(24), true).then((res) => {
-      assert.equal(res.statusCode, 400);
+      assert.equal(res.statusCode, 404);
 
       return service.getDBUser(users[0]._id);
     }).then((dbUser) => {
@@ -223,7 +223,7 @@ suite('User API tests', function () {
     service.logoutAPI();
     service.loginAPI(users[2]);
 
-    return service.followAPIUser(users[0]._id, true).then((res) => {
+    return service.followAPIUser(users[0]._id, false).then((res) => {
       assert.equal(res.statusCode, 204);
 
       return service.getDBUser(users[2]._id);
