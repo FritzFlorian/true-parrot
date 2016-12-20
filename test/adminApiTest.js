@@ -27,7 +27,7 @@ suite('Admin API tests', function () {
       // Login with admin user (marge)
       service.loginAPI(users[1]);
 
-      fixtures = require('./data/fixtures.json');
+      fixtures = _.cloneDeep(require('./data/fixtures.json'));
     });
   });
 
@@ -59,6 +59,22 @@ suite('Admin API tests', function () {
 
       return Tweet.find({});
     }).then((dbTweets) => {
+      assert.equal(dbTweets.length, tweets.length);
+    });
+  });
+
+  test('try to delete two not existing tweets as admin', function () {
+    const tweetsToDelete = [
+      'a'.repeat(24),
+      'abc',
+    ];
+
+    return service.deleteMultipleAPITweets(tweetsToDelete).then((res) => {
+      assert.equal(res.statusCode, 500);
+
+      return Tweet.find({});
+    }).then((dbTweets) => {
+      // Nothing changed
       assert.equal(dbTweets.length, tweets.length);
     });
   });
@@ -109,12 +125,56 @@ suite('Admin API tests', function () {
     });
   });
 
+  test('try to delete two users as non admin', function () {
+    service.logoutAPI();
+    service.loginAPI(users[2]);
+
+    const usersToDelete = [
+      users[0]._id,
+      users[1]._id,
+    ];
+
+    return service.deleteMultipleAPIUsers(usersToDelete).then((res) => {
+      assert.equal(res.statusCode, 403);
+
+      return User.find({});
+    }).then((dbUsers) => {
+      // Nothing changed
+      assert.equal(dbUsers.length, users.length);
+    });
+  });
+
+  test('try to delete two not existing as admin', function () {
+    const usersToDelete = [
+      'a'.repeat(24),
+      'abc',
+    ];
+
+    return service.deleteMultipleAPIUsers(usersToDelete).then((res) => {
+      assert.equal(res.statusCode, 500);
+
+      return User.find({});
+    }).then((dbUsers) => {
+      // Nothing changed
+      assert.equal(dbUsers.length, users.length);
+    });
+  });
+
   test('read stats as admin', function () {
     return service.getAPIAdminStats().then((res) => {
       assert.equal(res.statusCode, 200);
 
       assert.equal(res.json.tweetCount, tweets.length);
       assert.equal(res.json.userCount, users.length);
+    });
+  });
+
+  test('try to read stats as non admin', function () {
+    service.logoutAPI();
+    service.loginAPI(users[0]);
+
+    return service.getAPIAdminStats().then((res) => {
+      assert.equal(res.statusCode, 403);
     });
   });
 });

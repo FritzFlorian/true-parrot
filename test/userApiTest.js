@@ -23,7 +23,7 @@ suite('User API tests', function () {
 
       service.loginAPI(users[0]);
 
-      fixtures = require('./data/fixtures.json');
+      fixtures = _.cloneDeep(require('./data/fixtures.json'));
     });
   });
 
@@ -47,6 +47,30 @@ suite('User API tests', function () {
       assert.equal(userInfo.email, users[0].email);
       assert.equal(userInfo.scope.length, users[0].scope.length);
       assert.equal(userInfo.userId, users[0]._id);
+    });
+  });
+
+  test('try to authenticate with invalid password', function () {
+    service.logoutAPI();
+
+    // Change password that will be send to the server
+    users[0].password = 'abc';
+
+    return service.authenticateAPIUser(users[0]).then((res) => {
+      assert.isFalse(res.json.success);
+      assert.isUndefined(res.json.token);
+    });
+  });
+
+  test('try to authenticate with invalid email', function () {
+    service.logoutAPI();
+
+    // Change password that will be send to the server
+    users[0].email = 'abc@nonexisting.com';
+
+    return service.authenticateAPIUser(users[0]).then((res) => {
+      assert.isFalse(res.json.success);
+      assert.isUndefined(res.json.token);
     });
   });
 
@@ -106,6 +130,19 @@ suite('User API tests', function () {
     });
   });
 
+  test('try deleting user without being logged in should fail', function () {
+    service.logoutAPI();
+
+    return service.deleteAPIUser(users[1]._id).then((res) => {
+      assert.equal(res.statusCode, 401);
+
+      return service.getDBUsers();
+    }).then((dbUsers) => {
+      // Nothing should be deleted
+      assert.equal(dbUsers.length, users.length);
+    });
+  });
+
   test('try deleting not existing user by id', function () {
     return service.deleteAPIUser(users[0]).then((res) => {
       assert.equal(res.statusCode, 403);
@@ -113,6 +150,65 @@ suite('User API tests', function () {
       return service.getDBUsers();
     }).then((dbUsers) => {
       // Nothing should be deleted
+      assert.equal(dbUsers.length, users.length);
+    });
+  });
+
+  test('try to create user with invalid email address', function () {
+    fixtures.new_user.email = 'nonovalidemail';
+
+    return service.createAPIUser(fixtures.new_user).then((res) => {
+      assert.equal(res.statusCode, 400);
+
+      return service.getDBUsers();
+    }).then((dbUsers) => {
+      assert.equal(users.length, dbUsers.length);
+    });
+  });
+
+  test('try to create user with invalid description', function () {
+    fixtures.new_user.description = 'a'.repeat(200);
+
+    return service.createAPIUser(fixtures.new_user).then((res) => {
+      assert.equal(res.statusCode, 400);
+
+      return service.getDBUsers();
+    }).then((dbUsers) => {
+      assert.equal(users.length, dbUsers.length);
+    });
+  });
+
+  test('try to create user without first name', function () {
+    delete fixtures.new_user.firstName;
+
+    return service.createAPIUser(fixtures.new_user).then((res) => {
+      assert.equal(res.statusCode, 400);
+
+      return service.getDBUsers();
+    }).then((dbUsers) => {
+      assert.equal(users.length, dbUsers.length);
+    });
+  });
+
+  test('try to create user with short password', function () {
+    fixtures.new_user.password = 'a';
+
+    return service.createAPIUser(fixtures.new_user).then((res) => {
+      assert.equal(res.statusCode, 400);
+
+      return service.getDBUsers();
+    }).then((dbUsers) => {
+      assert.equal(users.length, dbUsers.length);
+    });
+  });
+
+  test('try to create user without parameters', function () {
+    return service.createAPIUser({}).then((res) => {
+      assert.equal(res.statusCode, 400);
+
+      return service.getDBUsers();
+    }).then((dbUsers) => {
+      // Nothing should be created
       assert.equal(dbUsers.length, users.length);
     });
   });
@@ -128,7 +224,7 @@ suite('User API tests', function () {
 
       assert.equal(res.statusCode, 201);
       assert(_.some([createdUser], fixtures.new_user),
-              'createdUser is a superset of the fixture user');
+          'createdUser is a superset of the fixture user');
 
       // Server should never return a password
       assert.isUndefined(createdUser.password);
@@ -138,17 +234,6 @@ suite('User API tests', function () {
       delete dbUser.password;
 
       assert.deepEqual(createdUser, dbUser);
-    });
-  });
-
-  test('try to create user without parameters', function () {
-    return service.createAPIUser({}).then((res) => {
-      assert.equal(res.statusCode, 400);
-
-      return service.getDBUsers();
-    }).then((dbUsers) => {
-      // Nothing should be created
-      assert.equal(dbUsers.length, users.length);
     });
   });
 
@@ -196,6 +281,20 @@ suite('User API tests', function () {
     });
   });
 
+  test('try to update users settings without being logged in', function () {
+    service.logoutAPI();
+    const updates = { firstName: 'New', lastName: 'Name' };
+
+    return service.updateAPIUser(users[1]._id, updates).then((res) => {
+      assert.equal(res.statusCode, 401);
+
+      return service.getDBUser(users[1]._id);
+    }).then((dbUser) => {
+      // DB should have no changes
+      assert.deepEqual(dbUser, users[1]);
+    });
+  });
+
   test('follow user that is not already followed', function () {
     return service.followAPIUser(users[1]._id, true).then((res) => {
       assert.equal(res.statusCode, 200);
@@ -206,6 +305,14 @@ suite('User API tests', function () {
     }).then((dbUser) => {
       // The current user should be following now
       assert.isTrue(_.includes(dbUser.following, users[1]._id));
+    });
+  });
+
+  test('try to follow user without login', function () {
+    service.logoutAPI();
+
+    return service.followAPIUser(users[1]._id, true).then((res) => {
+      assert.equal(res.statusCode, 401);
     });
   });
 
@@ -234,6 +341,14 @@ suite('User API tests', function () {
     }).then((dbUser) => {
       // The current user should be not following anymore
       assert.isFalse(_.includes(dbUser.following, users[0]._id));
+    });
+  });
+
+  test('try to un follow user without login', function () {
+    service.logoutAPI();
+
+    return service.followAPIUser(users[0]._id, true).then((res) => {
+      assert.equal(res.statusCode, 401);
     });
   });
 

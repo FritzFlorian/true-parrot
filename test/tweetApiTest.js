@@ -23,7 +23,7 @@ suite('Tweet API tests', function () {
 
       service.loginAPI(users[0]);
 
-      fixtures = require('./data/fixtures.json');
+      fixtures = _.cloneDeep(require('./data/fixtures.json'));
 
       return Tweet.find({}).sort({ createdAt: 'desc' }).limit(50).populate('creator').exec();
     }).then((populatedTweets) => {
@@ -70,6 +70,14 @@ suite('Tweet API tests', function () {
       for (let i = 0; i < tweets.length; i++) {
         assert.deepEqual(res.json[i], tweets[i]);
       }
+    });
+  });
+
+  test('try to get social graph without login', function () {
+    service.logoutAPI();
+
+    return service.getAPISocialGraph().then((res) => {
+      assert.equal(res.statusCode, 401);
     });
   });
 
@@ -144,6 +152,18 @@ suite('Tweet API tests', function () {
     });
   });
 
+  test('try deleteing tweet without being logged in', function () {
+    service.logoutAPI();
+
+    return service.deleteAPITweet(tweets[1]._id).then((res) => {
+      assert.equal(res.statusCode, 401);
+
+      return service.getDBTweet(tweets[1]._id);
+    }).then((tweet) => {
+      assert.isNotNull(tweet);
+    });
+  });
+
   test('try deleting not existing tweet by id', function () {
     return service.deleteAPITweet(tweets[0]).then((res) => {
       assert.equal(res.statusCode, 404);
@@ -202,6 +222,14 @@ suite('Tweet API tests', function () {
     });
   });
 
+  test('try create tweet without being logged in', function () {
+    service.logoutAPI();
+
+    return service.createAPITweet(fixtures.new_tweet).then((res) => {
+      assert.equal(res.statusCode, 401);
+    });
+  });
+
   test('parrot valid tweet that is not already parroted', function () {
     let tweet;
 
@@ -234,6 +262,14 @@ suite('Tweet API tests', function () {
     });
   });
 
+  test('try parroting tweet without being logged in', function () {
+    service.logoutAPI();
+
+    return service.parrotAPITweet(tweets[0]._id, true).then((res) => {
+      assert.equal(res.statusCode, 401);
+    });
+  });
+
   test('unparrot tweet that is already parroted', function () {
     let tweet;
 
@@ -263,6 +299,14 @@ suite('Tweet API tests', function () {
       return service.getDBTweet(tweet._id);
     }).then((dbTweet) => {
       assert.deepEqual(tweet, dbTweet);
+    });
+  });
+
+  test('try to unparrot tweet without being logged in', function () {
+    service.logoutAPI();
+
+    return service.parrotAPITweet(tweets[2]._id, false).then((res) => {
+      assert.equal(res.statusCode, 401);
     });
   });
 
