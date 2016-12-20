@@ -11,11 +11,14 @@
       {{user.description}}
     </div>
   </div>
-  {{# if tweetCount}}
-    <div class="extra content">
-      Has {{tweetCount}} tweets.
-    </div>
-  {{/if}}
+
+  <div class="extra content">
+    {{#if tweetCount}}
+      <p>Has {{tweetCount}} tweets.</p>
+    {{/if}}
+    <p>Follows {{ user.following.length }} Users.</p>
+    <p>Has {{ user.followers.length }} Followers.</p>
+  </div>
 
   {{#isAdmin}}
     <div class="extra content">
