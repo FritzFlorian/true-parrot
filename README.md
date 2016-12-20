@@ -1,5 +1,5 @@
 # True Parrot
-True Parrot is a small twitter like web app using node.js and hapi.
+True Parrot is a small twitter like web app using node.js and hapi for learning purpose.
 The goal is to get an overview of building web apps using node.
 
 Try the app on heroku: https://true-parrot.herokuapp.com/
@@ -12,7 +12,13 @@ Then simply clone the repo, run `npm install` and then run `npm run start`.
 ## Test and Code Coverage
 
 To run the tests use `npm run test`.
+
+Note on testing in the Webstorm IDE:
+You need to set the environment variable `NODE_ENV` to `test` to run the test.
+
 To run code coverage use `npm run coverage`.
+
+The coverage rate is low as there are only tests for the api, not the static html pages.
 
 ## Attribution
 
