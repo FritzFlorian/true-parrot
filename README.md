@@ -9,6 +9,32 @@ Try the app on heroku: https://true-parrot.herokuapp.com/
 To run the app you will have to setup an local mongo db server.
 Then simply clone the repo, run `npm install` and then run `npm run start`.
 
+## Environment Variables
+
+Some environment variables are required on all environments (dev, test, production),
+others are just needed in production.
+
+The following variables are required in all environments:
+
+| Variable Name    | Variable Value           |
+|------------------|--------------------------|
+|CLOUDINARY_NAME   | Your cloudinary name. See http://cloudinary.com/documentation/node_integration#configuration |
+|CLOUDINARY_KEY    | Your cloudinary key. See http://cloudinary.com/documentation/node_integration#configuration |
+|CLOUDINARY_SECRET | Your cloudinary secret. See http://cloudinary.com/documentation/node_integration#configuration |
+|NODE_ENV          | One of: production, dev, test |
+
+
+The following variables should be set in a production enviroment:
+
+| Variable Name    | Variable Value           |
+|------------------|--------------------------|
+|PORT              | Application Port, defaults to 4000 |
+|COOKIE_PASSWORD   | Password used for cookies, must be set in production |
+|JWT_PASSWORD      | Password used to encode JWT token, must be set in production |
+|MONGOLAB_URI      | The full monoglab connection URI, must be set in production |
+
+Important: to run the tests the NODE_ENV has to be set to test.
+
 ## Test and Code Coverage
 
 To run the tests use `npm run test`.
