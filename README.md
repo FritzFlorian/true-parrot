@@ -50,7 +50,18 @@ The result of the coverage can be viewed in `coverage/lcov-report/index.html`.
 ## Seeding
 
 To seed the app run `npm run seed`. 
-The remote Heroku app can be seeded using `heroku run npm run seed`
+The remote Heroku app can be seeded using `heroku run npm run seed`.
+
+## Hosting Providers Used
+
+The project is setup to work with specific hosting providers. It can easily be adobpted to others, but
+these are the ones you will need an account for usually.
+
+| Hoster           | Usage                    |
+|------------------|--------------------------|
+| Heroku           | Used to run the main node application |
+| MLab             | Used for a free mongo database |
+| Cloudinary       | Used for image hosting |
 
 ## Attribution
 
